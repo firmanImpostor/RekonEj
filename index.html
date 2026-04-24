@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplikasi Rekon EJ - Menu Utama</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #1a56db;
+            --secondary-color: #2563eb;
+            --hitachi-color: #7e6ae9;
+            --wincore-color: #10b981;
+            --hyosung-color: #f59e0b;
+            --ncr-color: #ef4444;
+            --crm-ncr-color: #ec4899;
+            --crm-oki-color: #06b6d4;
+            --jalin-color: #8b5cf6;
+            --light-color: #f8fafc;
+            --dark-color: #1e293b;
+            --gold-color: #d4af37;
+            --silver-color: #c0c0c0;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Montserrat', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #e2e8f0;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+        
+        /* Background efek */
+        .bg-effects {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+        
+        .bg-effect {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.1;
+            filter: blur(40px);
+        }
+        
+        .bg-effect-1 {
+            width: 500px;
+            height: 500px;
+            background: var(--hitachi-color);
+            top: -200px;
+            left: -200px;
+        }
+        
+        .bg-effect-2 {
+            width: 600px;
+            height: 600px;
+            background: var(--wincore-color);
+            bottom: -300px;
+            right: -200px;
+        }
+        
+        .bg-effect-3 {
+            width: 400px;
+            height: 400px;
+            background: var(--gold-color);
+            top: 50%;
+            left: 70%;
+        }
+        
+        /* Header Ringkas */
+        .header {
+            background: linear-gradient(135deg, rgba(26, 86, 219, 0.9) 0%, rgba(37, 99, 235, 0.85) 100%);
+            color: white;
+            padding: 25px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%23ffffff' fill-opacity='0.1' d='M0,128L48,117.3C96,107,192,85,288,112C384,139,480,213,576,218.7C672,224,768,160,864,138.7C960,117,1056,139,1152,149.3C1248,160,1344,160,1392,160L1440,160L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E");
+            background-size: cover;
+            background-position: center;
+            opacity: 0.2;
+        }
+        
+        .header-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .header-icon {
+            font-size: 2.2rem;
+            color: var(--gold-color);
+            text-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
+        }
+        
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 40px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        
+        /* Menu Grid */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+        
+        .menu-card {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.9) 100%);
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2), 
+                        0 5px 10px rgba(0, 0, 0, 0.15),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            text-align: center;
+            transition: all 0.4s ease;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .menu-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--card-color), transparent);
+        }
+        
+        .menu-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3), 
+                        0 5px 15px rgba(0, 0, 0, 0.2),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+        
+        .menu-icon {
+            font-size: 60px;
+            margin-bottom: 25px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .menu-icon::after {
+            content: '';
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--card-color);
+            opacity: 0.1;
+            z-index: -1;
+        }
+        
+        .menu-card:hover .menu-icon {
+            transform: scale(1.1);
+        }
+        
+        .menu-card h3 {
+            font-size: 1.6rem;
+            margin-bottom: 15px;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .menu-card p {
+            color: #cbd5e1;
+            margin-bottom: 25px;
+            flex-grow: 1;
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 14px 30px;
+            background: var(--card-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            letter-spacing: 0.5px;
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: all 0.4s;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .btn:hover::before {
+            left: 100%;
+        }
+        
+        .btn:active {
+            transform: translateY(1px);
+        }
+        
+        .btn-disabled {
+            background: #4b5563;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        
+        .btn-disabled:hover {
+            transform: none;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* Warna khusus untuk setiap menu */
+        .hitachi-card {
+            --card-color: var(--hitachi-color);
+        }
+        
+        .hitachi-card .menu-icon {
+            color: var(--hitachi-color);
+            text-shadow: 0 0 15px rgba(126, 106, 233, 0.4);
+        }
+        
+        .wincore-card {
+            --card-color: var(--wincore-color);
+        }
+        
+        .wincore-card .menu-icon {
+            color: var(--wincore-color);
+            text-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
+        }
+        
+        .hyosung-card {
+            --card-color: var(--hyosung-color);
+        }
+        
+        .hyosung-card .menu-icon {
+            color: var(--hyosung-color);
+            text-shadow: 0 0 15px rgba(245, 158, 11, 0.4);
+        }
+        
+        .ncr-card {
+            --card-color: var(--ncr-color);
+        }
+        
+        .ncr-card .menu-icon {
+            color: var(--ncr-color);
+            text-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
+        }
+
+        .crm-ncr-card {
+            --card-color: var(--crm-ncr-color);
+        }
+
+        .crm-ncr-card .menu-icon {
+            color: var(--crm-ncr-color);
+            text-shadow: 0 0 15px rgba(236, 72, 153, 0.4);
+        }
+
+        .crm-oki-card {
+            --card-color: var(--crm-oki-color);
+        }
+
+        .crm-oki-card .menu-icon {
+            color: var(--crm-oki-color);
+            text-shadow: 0 0 15px rgba(6, 182, 212, 0.4);
+        }
+        
+        .jalin-card {
+            --card-color: var(--jalin-color);
+        }
+        
+        .jalin-card .menu-icon {
+            color: var(--jalin-color);
+            text-shadow: 0 0 15px rgba(139, 92, 246, 0.4);
+        }
+        
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 25px 20px;
+            background: rgba(15, 23, 42, 0.8);
+            color: #cbd5e1;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+        }
+        
+        .footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--gold-color), transparent);
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8rem;
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            .header-icon {
+                font-size: 1.8rem;
+            }
+            
+            .menu-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .menu-card {
+                padding: 25px;
+            }
+            
+            .menu-icon {
+                font-size: 50px;
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background effects -->
+    <div class="bg-effects">
+        <div class="bg-effect bg-effect-1"></div>
+        <div class="bg-effect bg-effect-2"></div>
+        <div class="bg-effect bg-effect-3"></div>
+    </div>
+
+    <!-- Header Ringkas -->
+    <div class="header">
+        <div class="header-content">
+            <h1>
+                <span class="header-icon"><i class="fas fa-atm"></i></span>
+                Aplikasi Rekon EJ
+            </h1>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="menu-grid">
+            <!-- Hitachi Card -->
+            <div class="menu-card hitachi-card">
+                <div class="menu-icon">
+                    <i class="fas fa-atm"></i>
+                </div>
+                <h3>Rekon EJ Hitachi</h3>
+                <p>Aplikasi rekonsiliasi canggih untuk ATM dengan sistem CRM Hitachi. Mendukung format file .jrn dan .txt dengan analisis mendalam.</p>
+                <a href="RekonCRM.html" class="btn">Buka Aplikasi</a>
+            </div>
+            
+            <!-- Wincore Card -->
+            <div class="menu-card wincore-card">
+                <div class="menu-icon">
+                    <i class="fas fa-atm"></i>
+                </div>
+                <h3>Rekon EJ Wincore</h3>
+                <p>Solusi rekonsiliasi komprehensif untuk ATM Wincore. Proses file .txt dan .jrn dengan akurasi tinggi dan fitur ekspor data.</p>
+                <a href="rekon_wincore.html" class="btn">Buka Aplikasi</a>
+            </div>
+            
+            <!-- Hyosung Card -->
+            <div class="menu-card hyosung-card">
+                <div class="menu-icon">
+                    <i class="fas fa-atm"></i>
+                </div>
+                <h3>Rekon EJ Hyosung</h3>
+               <p>Solusi rekonsiliasi komprehensif untuk ATM Hyosung Proses file .txt dan .jrn dengan akurasi tinggi dan fitur ekspor data.</p>
+                <a href="rekon_hyosung.html" class="btn">Buka Aplikasi</a>
+            </div>
+            
+            <!-- NCR Card -->
+            <div class="menu-card ncr-card">
+                <div class="menu-icon">
+                    <i class="fas fa-atm"></i>
+                </div>
+                <h3>Rekon EJ NCR</h3>
+                <p>Tools rekonsiliasi untuk ATM NCR (Dalam pengembangan). Dengan interface intuitif dan processing yang cepat.</p>
+                <button class="btn btn-disabled" disabled>Segera Hadir</button>
+            </div>
+
+            <!-- CRM NCR Card -->
+            <div class="menu-card crm-ncr-card">
+                <div class="menu-icon">
+                    <i class="fas fa-cash-register"></i>
+                </div>
+                <h3>Rekon EJ CRM NCR</h3>
+                <p>Tools rekonsiliasi untuk CRM NCR (Dalam pengembangan). Dengan interface intuitif dan processing yang cepat.</p>
+                <button class="btn btn-disabled" disabled>Segera Hadir</button>
+            </div>
+
+            <!-- CRM OKI Card -->
+            <div class="menu-card crm-oki-card">
+                <div class="menu-icon">
+                    <i class="fas fa-cash-register"></i>
+                </div>
+                <h3>Rekon EJ CRM OKI</h3>
+                <p>Tools rekonsiliasi untuk CRM OKI (Dalam pengembangan). Dengan interface intuitif dan processing yang cepat.</p>
+                <button class="btn btn-disabled" disabled>Segera Hadir</button>
+            </div>
+            
+            <!-- Jalin Card -->
+            <div class="menu-card jalin-card">
+                <div class="menu-icon">
+                    <i class="fas fa-atm"></i>
+                </div>
+                <h3>Rekon EJ Jalin</h3>
+               <p>Solusi rekonsiliasi komprehensif untuk ATM Jalin Proses file .txt dan .jrn dengan akurasi tinggi dan fitur ekspor data.</p>
+                <a href="rekon_jalin.html" class="btn">Buka Aplikasi</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <p>Aplikasi Rekon EJ &copy; 2025 - Frederick Simarmata | fredericksimarmata@gmail.com</p>
+    </div>
+</body>
+</html>

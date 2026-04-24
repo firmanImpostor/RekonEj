@@ -1,0 +1,1558 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplikasi Rekon CRM Hitachi</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --hitachi: #6c5ce7;
+            --hitachi-dark: #5649c0;
+            --failed: #e74c3c;
+            --stored: #27ae60;
+            --taken: #3498db;
+            --replenish: #9b59b6;
+            --remaining: #16a085;
+            --tid: #2c3e50;
+            --cctv: #e67e22;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            padding-top: 0;
+            padding-bottom: 40px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        /* Header Megah */
+        .navbar-megah {
+            background: linear-gradient(135deg, var(--hitachi), var(--hitachi-dark));
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            padding: 15px 0;
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.8rem;
+            color: white !important;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+        }
+        
+        .navbar-brand i {
+            margin-right: 12px;
+            font-size: 2rem;
+        }
+        
+        .nav-link {
+            color: rgba(255, 255, 255, 0.85) !important;
+            font-weight: 500;
+            transition: all 0.3s;
+            padding: 0.5rem 1rem !important;
+            border-radius: 6px;
+        }
+        
+        .nav-link:hover {
+            color: white !important;
+            background-color: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        .nav-link.active {
+            color: white !important;
+            background-color: rgba(255, 255, 255, 0.15);
+            font-weight: 600;
+        }
+        
+        /* Konten utama */
+        .main-content {
+            margin-top: 30px;
+        }
+        
+        .card {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            border: none;
+            border-radius: 12px;
+            transition: transform 0.2s;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .instructions {
+            background-color: #e9ecef;
+            border-left: 4px solid var(--hitachi);
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 0 8px 8px 0;
+            font-size: 0.95rem;
+        }
+        
+        .footer {
+            margin-top: 30px;
+            padding: 15px;
+            background-color: #343a40;
+            color: white;
+            text-align: center;
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+        
+        .btn-hitachi {
+            background-color: var(--hitachi);
+            border-color: var(--hitachi);
+            color: white;
+            font-weight: 600;
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+        
+        .btn-hitachi:hover {
+            background-color: var(--hitachi-dark);
+            border-color: var(--hitachi-dark);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .upload-area {
+            border: 2px dashed #dee2e6;
+            border-radius: 12px;
+            padding: 30px 20px;
+            text-align: center;
+            margin-bottom: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            background-color: #f8f9fa;
+        }
+        
+        .upload-area:hover {
+            border-color: var(--hitachi);
+            background-color: #f0f7ff;
+            transform: translateY(-2px);
+        }
+        
+        .file-list {
+            max-height: 200px;
+            overflow-y: auto;
+            margin-top: 15px;
+        }
+        
+        .file-item {
+            padding: 8px 12px;
+            background-color: #f1f3f5;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.2s;
+            font-size: 0.9rem;
+        }
+        
+        .file-item:hover {
+            background-color: #e9ecef;
+        }
+        
+        .file-item .file-name {
+            flex-grow: 1;
+            margin-right: 10px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-weight: 500;
+        }
+        
+        .result-card {
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        
+        .result-header {
+            color: white;
+            padding: 15px;
+            font-weight: bold;
+            font-size: 1rem;
+        }
+        
+        .result-body {
+            padding: 20px;
+        }
+        
+        #remainingHeader {
+            background-color: var(--remaining);
+        }
+        
+        #calculationHeader {
+            background-color: var(--hitachi);
+        }
+        
+        .keyword {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 0.85rem;
+            background-color: #e9ecef;
+            font-weight: 600;
+        }
+        
+        .progress {
+            height: 8px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+        }
+        
+        .calculation-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 0;
+            font-size: 0.9rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-radius: 0 0 8px 8px;
+            overflow: hidden;
+        }
+        
+        .calculation-table th, .calculation-table td {
+            padding: 10px 12px;
+            text-align: center;
+            border: 1px solid #dee2e6;
+        }
+        
+        .calculation-table th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            color: #495057;
+        }
+        
+        .calculation-table tr:last-child {
+            font-weight: bold;
+            background-color: #e9ecef;
+        }
+        
+        .replenish-result {
+            font-size: 1.4rem;
+            font-weight: bold;
+            text-align: center;
+            padding: 15px;
+            margin-top: 20px;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 12px;
+            border: 2px dashed var(--replenish);
+        }
+        
+        .debug-info {
+            font-family: monospace;
+            background-color: #f8f9fa;
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 4px solid #e74c3c;
+            margin-top: 15px;
+            font-size: 0.8rem;
+            white-space: pre-wrap;
+            max-height: 300px;
+            overflow-y: auto;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .file-content {
+            font-family: monospace;
+            background-color: #f8f9fa;
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+            margin-top: 15px;
+            font-size: 0.75rem;
+            white-space: pre-wrap;
+            max-height: 300px;
+            overflow-y: auto;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .remaining-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-radius: 0 0 8px 8px;
+            overflow: hidden;
+            font-size: 0.9rem;
+        }
+        
+        .remaining-table th, .remaining-table td {
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #dee2e6;
+        }
+        
+        .remaining-table th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+        }
+        
+        .remaining-table tr:last-child {
+            font-weight: bold;
+            background-color: #e9ecef;
+        }
+        
+        .tid-value {
+            font-size: 1.1rem;
+            font-weight: bold;
+            font-family: monospace;
+            color: #2c3e50;
+            letter-spacing: 1px;
+            background-color: #e9ecef;
+            padding: 4px 10px;
+            border-radius: 6px;
+            display: inline-block;
+            margin-left: 10px;
+        }
+        
+        .section-title {
+            border-left: 4px solid var(--hitachi);
+            padding-left: 12px;
+            margin: 25px 0 15px 0;
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .badge {
+            font-weight: 500;
+            padding: 5px 8px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+        }
+        
+        .card-header {
+            padding: 12px 15px;
+            font-size: 0.95rem;
+        }
+        
+        .card-header h5 {
+            font-size: 1rem;
+            margin-bottom: 0;
+        }
+        
+        .table th, .table td {
+            padding: 8px 10px;
+            font-size: 0.9rem;
+        }
+        
+        .table thead th {
+            background-color: #f8f9fa;
+        }
+        
+        .calculation-card {
+            margin-top: 25px;
+        }
+        
+        .file-input-container {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+        }
+        
+        .file-input-container input[type="file"] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+        
+        /* CCTV Table Styles */
+        .cctv-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 0;
+            font-size: 0.85rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-radius: 0 0 8px 8px;
+            overflow: hidden;
+        }
+        
+        .cctv-table th, .cctv-table td {
+            padding: 8px 10px;
+            text-align: left;
+            border: 1px solid #dee2e6;
+        }
+        
+        .cctv-table th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+        }
+        
+        .cctv-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        .cctv-table tr:hover {
+            background-color: #f1f3f5;
+        }
+        
+        .cctv-badge {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-right: 5px;
+        }
+        
+        .badge-replenishment {
+            background-color: var(--replenish);
+            color: white;
+        }
+        
+        .badge-door {
+            background-color: var(--cctv);
+            color: white;
+        }
+        
+        .badge-power {
+            background-color: var(--tid);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Megah -->
+    <nav class="navbar navbar-expand-lg navbar-megah">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-calculator"></i>
+                Aplikasi Rekon CRM Hitachi
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="https://firmanimpostor.github.io/RekonEj/"><i class="fas fa-home me-1"></i> Profile </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><i class="fas fa-info-circle me-1"></i> Panduan</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><i class="fas fa-history me-1"></i> Riwayat</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><i class="fas fa-cog me-1"></i> Pengaturan</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container main-content">
+        <!-- Instructions -->
+        <div class="instructions">
+            <h4><i class="fas fa-info-circle me-2"></i>Rekon EJ CRM Hitachi, Petunjuk Penggunaan</h4>
+            <ol class="mb-0">
+                <li>Potong EJ Periode RPL dari COUNTERS CLEARED </li>
+                <li>Upload file <span class="keyword">.jrn</span> atau <span class="keyword">.txt</span> dari CRM Hitachi (bisa multiple files)</li>
+               </ol>
+          </div>
+
+        <div class="row">
+            <!-- Upload Section -->
+             <!-- Upload Section -->
+             <div class="col-lg-5">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0"><i class="fas fa-upload me-2"></i>Upload File</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="upload-area" id="uploadArea">
+                            <i class="fas fa-cloud-upload-alt fa-3x mb-3" style="color: var(--hitachi);"></i>
+                            <h5>Drop file di sini atau klik untuk memilih</h5>
+                            <p class="text-muted">Format file: .jrn atau .txt (multiple files supported)</p>
+                            <button class="btn btn-hitachi mt-2">
+                                <i class="fas fa-file-upload me-2"></i>Pilih File
+                            </button>
+                        </div>
+                        <input type="file" id="fileInput" multiple accept=".jrn,.txt" style="display: none;">
+                        
+                        <div id="fileListContainer" class="d-none">
+                            <h6 class="mt-4">File yang diupload:</h6>
+                            <div class="file-list" id="fileList">
+                                <!-- File list will be populated here -->
+                            </div>
+                        </div>
+                        
+                        
+                        <div class="progress d-none" id="progressBar">
+                            <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%"></div>
+                        </div>
+                        
+                        <button id="processBtn" class="btn btn-hitachi w-100 mt-3 d-none">
+                            <i class="fas fa-cogs me-2"></i>Proses Rekonsiliasi
+                        </button>
+                    </div>
+                </div>
+
+                <!-- File Content Preview -->
+                <div class="card mt-4 d-none" id="filePreviewCard">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="mb-0"><i class="fas fa-file-alt me-2"></i>Pratinjau File</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="filePreview" class="file-content">
+                            <!-- File content will be populated here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results Section -->
+            <div class="col-lg-7">
+                <h4 class="section-title">Sisa Lembar (Remaining) <span class="tid-value" id="remainingTid">-</span></h4>
+                <div class="card result-card">
+                    <div class="result-header" id="remainingHeader">
+                        <i class="fas fa-calculator me-2"></i>Hasil Perhitungan Sisa Lembar
+                    </div>
+                    <div class="result-body">
+                        <table class="remaining-table">
+                            <thead>
+                                <tr>
+                                    <th>Denominasi</th>
+                                    <th>Replenish</th>
+                                    <th>Stored Count</th>
+                                    <th>Dispense Count</th>
+                                    <th>Sisa Lembar</th>
+                                    <th>Formula</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>50,000</td>
+                                    <td id="remaining50Replenish">0</td>
+                                    <td id="remaining50Stored">0</td>
+                                    <td id="remaining50Dispense">0</td>
+                                    <td id="remaining50Total" class="fw-bold">0</td>
+                                    <td>Replenish + Stored - Dispense</td>
+                                </tr>
+                                <tr>
+                                    <td>100,000</td>
+                                    <td id="remaining100Replenish">0</td>
+                                    <td id="remaining100Stored">0</td>
+                                    <td id="remaining100Dispense">0</td>
+                                    <td id="remaining100Total" class="fw-bold">0</td>
+                                    <td>Replenish + Stored - Dispense</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <h4 class="section-title calculation-card">Hasil Perhitungan Rekonsiliasi <span class="tid-value" id="calcTid">-</span></h4>
+                <div class="card result-card">
+                    <div class="result-header" id="calculationHeader">
+                        <i class="fas fa-calculator me-2"></i>Detail Perhitungan
+                    </div>
+                    <div class="result-body">
+                        <table class="calculation-table">
+                            <thead>
+                                <tr>
+                                    <th>Keterangan</th>
+                                    <th>Nilai</th>
+                                    <th>Keterangan Formula</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Init Amount (dari Replenishment)</td>
+                                    <td id="calcInitAmount">Rp 0</td>
+                                    <td>Jumlah RPL</td>
+                                </tr>
+                                <tr>
+                                    <td>Host Store: Failed (Setor Tunai Gagal)</td>
+                                    <td id="calcFailed">+ Rp 0</td>
+                                    <td>Ditambahkan ke Init Amount</td>
+                                </tr>
+                                <tr>
+                                    <td>Host Store: Stored (Setor Tunai Berhasil)</td>
+                                    <td id="calcStored">+ Rp 0</td>
+                                    <td>Ditambahkan ke Init Amount</td>
+                                </tr>
+                                <tr>
+                                    <td>Cash Taken (Tarik Tunai)</td>
+                                    <td id="calcTaken">- Rp 0</td>
+                                    <td>Dikurangkan dari Init Amount</td>
+                                </tr>
+                                <tr>
+                                    <td>Hasil Rekonsiliasi</td>
+                                    <td id="calcResult">Rp 0</td>
+                                    <td>Init Amount + Failed + Stored - Taken</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="replenish-result">
+                            <i class="fas fa-check-circle me-2 text-success"></i>
+                            <span>Hasil Akhir Rekonsiliasi: </span>
+                            <span id="finalResult">Rp 0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Transaction Details -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <h4 class="section-title">Detail Transaksi <span class="tid-value" id="detailTid">-</span></h4>
+                <div class="card">
+                    <div class="card-header bg-secondary text-white">
+                        <h5 class="mb-0"><i class="fas fa-list me-2"></i>Daftar Transaksi</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-container" style="max-height: 300px; overflow-y: auto;">
+                            <table class="table table-sm table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Jenis</th>
+                                        <th>File</th>
+                                        <th>Line</th>
+                                        <th>Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="transactionDetails">
+                                    <!-- Transaction details will be populated here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CCTV Request Section -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <h4 class="section-title">Permintaan CCTV <span class="tid-value" id="cctvTid">-</span></h4>
+                <div class="card">
+                    <div class="card-header" style="background-color: var(--cctv); color: white;">
+                        <h5 class="mb-0"><i class="fas fa-video me-2"></i>Daftar CCTV yang Diminta</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-container" style="max-height: 400px; overflow-y: auto;">
+                            <table class="cctv-table">
+                                <thead>
+                                    <tr>
+                                        <th>Waktu</th>
+                                        <th>Jenis</th>
+                                        <th>File</th>
+                                        <th>Line</th>
+                                        <th>Detail</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="cctvDetails">
+                                    <!-- CCTV details will be populated here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Debug Info -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header bg-warning text-dark">
+                        <h5 class="mb-0"><i class="fas fa-bug me-2"></i>Debug Information</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="debugInfo" class="debug-info">
+                            Debug information will appear here after processing...
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <button id="exportBtn" class="btn btn-hitachi w-100 d-none">
+                    <i class="fas fa-download me-2"></i>Export Hasil ke CSV
+                </button>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer mt-4">
+            <p class="mb-0">Frederick Simarmata &copy; 2025 - fredericksimarmata@gmail.com</p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elements
+            const uploadArea = document.getElementById('uploadArea');
+            const fileInput = document.getElementById('fileInput');
+            const fileList = document.getElementById('fileList');
+            const fileListContainer = document.getElementById('fileListContainer');
+            const processBtn = document.getElementById('processBtn');
+            const progressBar = document.getElementById('progressBar');
+            const exportBtn = document.getElementById('exportBtn');
+            const debugInfo = document.getElementById('debugInfo');
+            const filePreviewCard = document.getElementById('filePreviewCard');
+            const filePreview = document.getElementById('filePreview');
+            
+            // TID elements
+            const remainingTid = document.getElementById('remainingTid');
+            const calcTid = document.getElementById('calcTid');
+            const detailTid = document.getElementById('detailTid');
+            const cctvTid = document.getElementById('cctvTid');
+            
+            const remaining50Replenish = document.getElementById('remaining50Replenish');
+            const remaining50Stored = document.getElementById('remaining50Stored');
+            const remaining50Dispense = document.getElementById('remaining50Dispense');
+            const remaining50Total = document.getElementById('remaining50Total');
+            
+            const remaining100Replenish = document.getElementById('remaining100Replenish');
+            const remaining100Stored = document.getElementById('remaining100Stored');
+            const remaining100Dispense = document.getElementById('remaining100Dispense');
+            const remaining100Total = document.getElementById('remaining100Total');
+            
+            const calcInitAmount = document.getElementById('calcInitAmount');
+            const calcFailed = document.getElementById('calcFailed');
+            const calcStored = document.getElementById('calcStored');
+            const calcTaken = document.getElementById('calcTaken');
+            const calcResult = document.getElementById('calcResult');
+            const finalResult = document.getElementById('finalResult');
+            
+            const transactionDetails = document.getElementById('transactionDetails');
+            const cctvDetails = document.getElementById('cctvDetails');
+            
+            let uploadedFiles = [];
+            let results = {
+                failed: { total: 0, count: 0, transactions: [] },
+                stored: { total: 0, count: 0, transactions: [] },
+                taken: { total: 0, count: 0, transactions: [] },
+                replenish: { total: 0, count: 0, transactions: [] },
+                denom: {
+                    replenish50: 0,
+                    replenish100: 0,
+                    stored50: 0,
+                    stored100: 0,
+                    dispense50: 0,
+                    dispense100: 0
+                },
+                cctv: {
+                    replenishment: [],
+                    door: [],
+                    power: []
+                },
+                tid: null
+            };
+            
+            // Upload area functionality - PERBAIKAN DI SINI
+            uploadArea.addEventListener('click', function(e) {
+                // Mencegah event bubbling yang mungkin mengganggu
+                e.stopPropagation();
+                fileInput.click();
+            });
+            
+            // PERBAIKAN: Menangani perubahan pada input file
+            fileInput.addEventListener('change', function(event) {
+                // Reset previous results when new files are selected
+                resetResults();
+                
+                if (event.target.files && event.target.files.length > 0) {
+                    handleFiles(event.target.files);
+                    
+                    // Reset nilai input file untuk mengizinkan upload file yang sama lagi
+                    setTimeout(() => {
+                        fileInput.value = '';
+                    }, 100);
+                }
+            });
+            
+            // Drag and drop functionality
+            uploadArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                uploadArea.style.borderColor = 'var(--hitachi)';
+                uploadArea.style.backgroundColor = '#f0f7ff';
+            });
+            
+            uploadArea.addEventListener('dragleave', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                uploadArea.style.borderColor = '#dee2e6';
+                uploadArea.style.backgroundColor = '#f8f9fa';
+            });
+            
+            uploadArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                uploadArea.style.borderColor = '#dee2e6';
+                uploadArea.style.backgroundColor = '#f8f9fa';
+                
+                if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                    // Reset previous results when new files are dropped
+                    resetResults();
+                    handleFiles(e.dataTransfer.files);
+                }
+            });
+            
+            // Process button
+          // Process button
+        processBtn.addEventListener('click', function() {
+            // Nonaktifkan tombol setelah diklik
+            processBtn.disabled = true;
+            processBtn.innerHTML = '<i class="fas fa-cog fa-spin me-2"></i>Sedang Memproses...';
+            
+            // Jalankan proses file
+            processFiles();
+        });
+        
+            // Export button
+            exportBtn.addEventListener('click', exportResults);
+            
+            // Reset all results
+            function resetResults() {
+                results = {
+                    failed: { total: 0, count: 0, transactions: [] },
+                    stored: { total: 0, count: 0, transactions: [] },
+                    taken: { total: 0, count: 0, transactions: [] },
+                    replenish: { total: 0, count: 0, transactions: [] },
+                    denom: {
+                        replenish50: 0,
+                        replenish100: 0,
+                        stored50: 0,
+                        stored100: 0,
+                        dispense50: 0,
+                        dispense100: 0
+                    },
+                    cctv: {
+                        replenishment: [],
+                        door: [],
+                        power: []
+                    },
+                    tid: null
+                };
+                
+                // Clear file list
+                fileList.innerHTML = '';
+                fileListContainer.classList.add('d-none');
+                processBtn.classList.add('d-none');
+                exportBtn.classList.add('d-none');
+                
+                // Reset TID values
+                remainingTid.textContent = '-';
+                calcTid.textContent = '-';
+                detailTid.textContent = '-';
+                cctvTid.textContent = '-';
+                
+                // Reset displayed values
+                remaining50Replenish.textContent = '0';
+                remaining50Stored.textContent = '0';
+                remaining50Dispense.textContent = '0';
+                remaining50Total.textContent = '0';
+                
+                remaining100Replenish.textContent = '0';
+                remaining100Stored.textContent = '0';
+                remaining100Dispense.textContent = '0';
+                remaining100Total.textContent = '0';
+                
+                calcInitAmount.textContent = 'Rp 0';
+                calcFailed.textContent = '+ Rp 0';
+                calcStored.textContent = '+ Rp 0';
+                calcTaken.textContent = '- Rp 0';
+                calcResult.textContent = 'Rp 0';
+                finalResult.textContent = 'Rp 0';
+                
+                transactionDetails.innerHTML = '';
+                cctvDetails.innerHTML = '';
+                debugInfo.textContent = 'Debug information will appear here after processing...';
+            }
+            
+            // Handle uploaded files
+            function handleFiles(files) {
+                uploadedFiles = []; // Reset uploaded files array
+                fileList.innerHTML = ''; // Clear file list
+                
+                 // Aktifkan kembali tombol proses ketika file baru diupload
+            processBtn.disabled = false;
+            processBtn.innerHTML = '<i class="fas fa-cogs me-2"></i>Proses Rekonsiliasi';
+            
+                let validFilesFound = false;
+                
+                for (let i = 0; i < files.length; i++) {
+                    const file = files[i];
+                    if (file.name.endsWith('.jrn') || file.name.endsWith('.txt')) {
+                        validFilesFound = true;
+                        uploadedFiles.push(file);
+                        
+                        const fileItem = document.createElement('div');
+                        fileItem.className = 'file-item';
+                        fileItem.innerHTML = `
+                            <span class="file-name">${file.name}</span>
+                            <span class="file-size">${formatFileSize(file.size)}</span>
+                        `;
+                        fileList.appendChild(fileItem);
+                        
+                        // Preview the first file
+                        if (i === 0) {
+                            const reader = new FileReader();
+                            reader.onload = function(e) {
+                                filePreview.textContent = e.target.result;
+                                filePreviewCard.classList.remove('d-none');
+                            };
+                            reader.readAsText(file);
+                        }
+                    }
+                }
+                
+                if (validFilesFound) {
+                    fileListContainer.classList.remove('d-none');
+                    processBtn.classList.remove('d-none');
+                } else if (files.length > 0) {
+                    // Tampilkan pesan error jika file tidak valid
+                    alert('Hanya file dengan ekstensi .jrn atau .txt yang diperbolehkan.');
+                }
+            }
+            
+            // Process all uploaded files
+            function processFiles() {
+                // Show progress bar
+                progressBar.classList.remove('d-none');
+                const progressBarInner = progressBar.querySelector('.progress-bar');
+                
+                // Clear debug info
+                debugInfo.textContent = 'Memproses file...\n';
+                
+                // Process each file
+                let processed = 0;
+                uploadedFiles.forEach(file => {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const content = e.target.result;
+                        debugInfo.textContent += `\nMemproses file: ${file.name}\n`;
+                        processFileContent(content, file.name);
+                        
+                        processed++;
+                        const progress = (processed / uploadedFiles.length) * 100;
+                        progressBarInner.style.width = `${progress}%`;
+                        
+                        if (processed === uploadedFiles.length) {
+                            // All files processed
+                            progressBar.classList.add('d-none');
+                            displayResults();
+                            exportBtn.classList.remove('d-none');
+                        }
+                    };
+                    reader.readAsText(file);
+                });
+            }
+            
+            // Process content of a single file
+            function processFileContent(content, fileName) {
+                const lines = content.split('\n');
+                let debugContent = '';
+                
+                // Process TID (ATM ID) - only once
+                if (results.tid === null) {
+                    for (let i = 0; i < lines.length; i++) {
+                        const line = lines[i];
+                        if (line.includes('ATM ID :')) {
+                            const tidMatch = line.match(/ATM ID :\s*(\d+)/);
+                            if (tidMatch && tidMatch[1]) {
+                                results.tid = tidMatch[1];
+                                debugContent += `✓ Ditemukan ATM ID: ${results.tid}\n`;
+                                break;
+                            }
+                        }
+                    }
+                }
+                
+                // Process REPLENISHMENT first (only the first one found)
+                let replenishFound = false;
+                
+                for (let i = 0; i < lines.length; i++) {
+                    const line = lines[i];
+                    
+                    if (!replenishFound && line.includes('REPLENISHMENT')) {
+                        debugContent += `✓ Ditemukan REPLENISHMENT di baris ${i+1}\n`;
+                        
+                        // For REPLENISHMENT, look for INIT AMOUNT below (within 50 lines)
+                        for (let j = i + 1; j < lines.length && j <= i + 50; j++) {
+                            if (lines[j].includes('INIT AMOUNT:')) {
+                                const amountInfo = extractInitAmountFromLine(lines[j]);
+                                if (amountInfo) {
+                                    debugContent += `✓ Ditemukan INIT AMOUNT di baris ${j+1}: ${amountInfo.amountRaw} → ${formatCurrency(amountInfo.amount)}\n`;
+                                    results.replenish.count = 1; // Hanya hitung 1
+                                    results.replenish.total = amountInfo.amount; // Hanya ambil nilai pertama
+                                    results.replenish.transactions = [{
+                                        file: fileName,
+                                        amount: amountInfo.amount,
+                                        line: i + 1,
+                                        initAmountLine: j + 1
+                                    }];
+                                    replenishFound = true;
+                                    debugContent += `✓ Mengambil nilai REPLENISHMENT pertama: ${formatCurrency(amountInfo.amount)}\n`;
+                                }
+                            }
+                        }
+                        
+                        // Process REPLENISHMENT lembar (cassette data)
+                        if (!replenishFound) {
+                            debugContent += `✗ INIT AMOUNT tidak ditemukan setelah REPLENISHMENT\n`;
+                        }
+                        
+                        // Process cassette data for replenish lembar
+                        processReplenishLembar(lines, i, debugContent);
+                        
+                        // Hentikan pencarian REPLENISHMENT setelah menemukan yang pertama
+                        break;
+                    }
+                }
+                
+                // Process other keywords (Host Store: Failed, Host Store: Stored, Cash Taken)
+                for (let i = 0; i < lines.length; i++) {
+                    const line = lines[i];
+                    
+                    if (line.includes('Host Store: Failed')) {
+                        const amount = findAmountAbove(lines, i);
+                        if (amount !== null) {
+                            results.failed.count++;
+                            results.failed.total += amount;
+                            results.failed.transactions.push({
+                                file: fileName,
+                                amount: amount,
+                                line: i + 1
+                            });
+                        }
+                    }
+                    else if (line.includes('Host Store: Stored')) {
+                        const amount = findAmountAbove(lines, i);
+                        if (amount !== null) {
+                            results.stored.count++;
+                            results.stored.total += amount;
+                            results.stored.transactions.push({
+                                file: fileName,
+                                amount: amount,
+                                line: i + 1
+                            });
+                        }
+                    }
+                    else if (line.includes('Cash Taken')) {
+                        const amount = findAmountAbove(lines, i);
+                        if (amount !== null) {
+                            results.taken.count++;
+                            results.taken.total += amount;
+                            results.taken.transactions.push({
+                                file: fileName,
+                                amount: amount,
+                                line: i + 1
+                            });
+                        }
+                    }
+                }
+                
+                // Process Stored Count and Dispense Count for denomination counting
+                processDenomCounts(lines, fileName, debugContent);
+                
+                // Process CCTV keywords (REPLENISHMENT, Door, Power Up)
+                processCCTVEvents(lines, fileName, debugContent);
+                
+                // Update debug info
+                debugInfo.textContent += debugContent;
+            }
+            
+            // Process REPLENISHMENT lembar (cassette data)
+            function processReplenishLembar(lines, startLine, debugContent) {
+                debugContent += `✓ Mencari data cassette setelah REPLENISHMENT\n`;
+                
+                for (let i = startLine + 1; i < lines.length; i++) {
+                    const line = lines[i];
+                    
+                    // Stop when we reach the separator line
+                    if (line.includes('----------------------------------------')) {
+                        break;
+                    }
+                    
+                    // Look for cassette data patterns like CASSETTEX   50000 1500
+                    const cassetteMatch = line.match(/(CASSETTE\d+)\s+(\d+)\s+(\d+)/);
+                    if (cassetteMatch) {
+                        const cassette = cassetteMatch[1];
+                        const denomValue = parseInt(cassetteMatch[2], 10);
+                        const denomCount = parseInt(cassetteMatch[3], 10);
+                        
+                        debugContent += `✓ Ditemukan ${cassette}: Denom ${denomValue}, Count ${denomCount}\n`;
+                        
+                        // Bagi nilai count menjadi 2 sesuai instruksi
+                        const dividedCount = Math.floor(denomCount / 2);
+                        
+                        if (denomValue === 50000) {
+                            results.denom.replenish50 += dividedCount;
+                        } else if (denomValue === 100000) {
+                            results.denom.replenish100 += dividedCount;
+                        }
+                    }
+                }
+                
+                debugContent += `✓ Total Replenish Lembar (setelah dibagi 2): 50,000=${results.denom.replenish50}, 100,000=${results.denom.replenish100}\n`;
+            }
+            
+            // Process Stored Count and Dispense Count for denomination counting
+            function processDenomCounts(lines, fileName, debugContent) {
+                for (let i = 0; i < lines.length; i++) {
+                    const line = lines[i];
+                    
+                    // Process Stored Count
+                    if (line.includes('Stored Count')) {
+                        debugContent += `✓ Ditemukan Stored Count di baris ${i+1}\n`;
+                        
+                        // Look for denomination data before [Jpr contents]
+                        for (let j = i + 1; j < lines.length; j++) {
+                            if (lines[j].includes('[Jpr contents]')) {
+                                break; // Stop when we reach [Jpr contents]
+                            }
+                            
+                            // Check for denomination patterns like [50000, X] or [100000, X]
+                            const denomMatch = lines[j].match(/\[(\d+),\s*(\d+)\]/);
+                            if (denomMatch) {
+                                const denomValue = parseInt(denomMatch[1], 10);
+                                const denomCount = parseInt(denomMatch[2], 10);
+                                
+                                if (denomValue === 50000) {
+                                    results.denom.stored50 += denomCount;
+                                    debugContent += `✓ Denom 50,000: ${denomCount} lembar\n`;
+                                } else if (denomValue === 100000) {
+                                    results.denom.stored100 += denomCount;
+                                    debugContent += `✓ Denom 100,000: ${denomCount} lembar\n`;
+                                }
+                            }
+                        }
+                    }
+                    
+                    // Process Dispense Count
+                    if (line.includes('Dispense Count')) {
+                        debugContent += `✓ Ditemukan Dispense Count di baris ${i+1}\n`;
+                        
+                        // Look for pattern like [X,X,X,X] after Dispense Count
+                        const dispenseMatch = line.match(/Dispense Count\s+\[(\d+),(\d+),(\d+),(\d+)\]/);
+                        if (dispenseMatch) {
+                            const count1 = parseInt(dispenseMatch[1], 10);
+                            const count2 = parseInt(dispenseMatch[2], 10);
+                            const count3 = parseInt(dispenseMatch[3], 10);
+                            const count4 = parseInt(dispenseMatch[4], 10);
+                            
+                            // First two values are for 100,000 denomination
+                            results.denom.dispense100 += (count1 + count2);
+                            
+                            // Last two values are for 50,000 denomination
+                            results.denom.dispense50 += (count3 + count4);
+                            
+                            debugContent += `✓ Dispense Count: 100,000=${count1 + count2} lembar, 50,000=${count3 + count4} lembar\n`;
+                        }
+                    }
+                }
+            }
+            
+            // Process CCTV events (REPLENISHMENT, Door, Power Up)
+            function processCCTVEvents(lines, fileName, debugContent) {
+                debugContent += `\n✓ Mencari event untuk CCTV...\n`;
+                
+                for (let i = 0; i < lines.length; i++) {
+                    const line = lines[i];
+                    
+                    // Process REPLENISHMENT events
+                    if (line.includes('REPLENISHMENT')) {
+                        // Extract timestamp if available
+                        const timestamp = extractTimestamp(line);
+                        
+                        results.cctv.replenishment.push({
+                            file: fileName,
+                            line: i + 1,
+                            timestamp: timestamp,
+                            detail: line.trim()
+                        });
+                        
+                        debugContent += `✓ Ditemukan REPLENISHMENT untuk CCTV di baris ${i+1}\n`;
+                    }
+                    
+                    // Process Door events
+                    else if (line.includes('Door')) {
+                        // Extract timestamp if available
+                        const timestamp = extractTimestamp(line);
+                        
+                        results.cctv.door.push({
+                            file: fileName,
+                            line: i + 1,
+                            timestamp: timestamp,
+                            detail: line.trim()
+                        });
+                        
+                        debugContent += `✓ Ditemukan Door event untuk CCTV di baris ${i+1}\n`;
+                    }
+                    
+                    // Process Power Up events
+                    else if (line.includes('Power Up') || line.includes('Power-up') || line.includes('PowerOn')) {
+                        // Extract timestamp if available
+                        const timestamp = extractTimestamp(line);
+                        
+                        results.cctv.power.push({
+                            file: fileName,
+                            line: i + 1,
+                            timestamp: timestamp,
+                            detail: line.trim()
+                        });
+                        
+                        debugContent += `✓ Ditemukan Power Up event untuk CCTV di baris ${i+1}\n`;
+                    }
+                }
+            }
+            
+            // Extract timestamp from a line
+            function extractTimestamp(line) {
+                // Look for patterns like [2023/10/15 14:30:25] or similar
+                const timestampMatch = line.match(/(\d{2,4}[\/\-]\d{1,2}[\/\-]\d{1,2}[\sT]\d{1,2}:\d{1,2}:\d{1,2})/);
+                if (timestampMatch) {
+                    return timestampMatch[0];
+                }
+                
+                // Alternative pattern for other timestamp formats
+                const altTimestampMatch = line.match(/(\d{1,2}:\d{1,2}:\d{1,2})/);
+                if (altTimestampMatch) {
+                    return altTimestampMatch[0];
+                }
+                
+                return 'Waktu tidak ditemukan';
+            }
+            
+            // Find AMOUNT value above the current line
+            function findAmountAbove(lines, currentLine) {
+                // Search upwards from current line
+                for (let i = currentLine - 1; i >= 0 && i >= currentLine - 10; i--) {
+                    if (lines[i].includes('AMOUNT')) {
+                        // Extract numeric value from amount line
+                        return extractAmountFromLine(lines[i]);
+                    }
+                }
+                return null;
+            }
+            
+            // Extract amount from a line containing AMOUNT information
+            function extractAmountFromLine(line) {
+                // Match numbers with optional dots/commas as thousand separators
+                const amountMatch = line.match(/(\d[\d.,]*)/);
+                if (amountMatch) {
+                    // Clean and convert the amount
+                    const amountStr = amountMatch[0].replace(/\./g, '').replace(/,/g, '');
+                    const amount = parseInt(amountStr, 10);
+                    return isNaN(amount) ? null : amount;
+                }
+                return null;
+            }
+            
+            // Extract amount from a line containing INIT AMOUNT information
+            function extractInitAmountFromLine(line) {
+                // Match pattern: INIT AMOUNT: [spaces] [amount with dots/commas] [spaces] IDR
+                const initAmountMatch = line.match(/INIT AMOUNT:\s*([\d.,]+)\s*IDR/i);
+                if (initAmountMatch && initAmountMatch[1]) {
+                    // Clean and convert the amount
+                    const amountStr = initAmountMatch[1].replace(/\./g, '').replace(/,/g, '');
+                    const amount = parseInt(amountStr, 10);
+                    if (!isNaN(amount)) {
+                        return {
+                            amount: amount,
+                            amountRaw: initAmountMatch[1]
+                        };
+                    }
+                }
+                
+                // Alternative pattern: look for numbers between INIT AMOUNT: and IDR
+                const alternativeMatch = line.match(/INIT AMOUNT:(.*?)IDR/i);
+                if (alternativeMatch && alternativeMatch[1]) {
+                    const amountPart = alternativeMatch[1].trim();
+                    const amountMatch = amountPart.match(/([\d.,]+)/);
+                    if (amountMatch) {
+                        const amountStr = amountMatch[0].replace(/\./g, '').replace(/,/g, '');
+                        const amount = parseInt(amountStr, 10);
+                        if (!isNaN(amount)) {
+                            return {
+                                amount: amount,
+                                amountRaw: amountMatch[0]
+                            };
+                        }
+                    }
+                }
+                
+                // Last resort: extract any number from the line
+                const numberMatch = line.match(/(\d[\d.,]*)/);
+                if (numberMatch) {
+                    const amountStr = numberMatch[0].replace(/\./g, '').replace(/,/g, '');
+                    const amount = parseInt(amountStr, 10);
+                    if (!isNaN(amount)) {
+                        return {
+                            amount: amount,
+                            amountRaw: numberMatch[0]
+                        };
+                    }
+                }
+                
+                return null;
+            }
+            
+            // Display results
+            function displayResults() {
+                // Update TID values
+                const tid = results.tid || '-';
+                remainingTid.textContent = tid;
+                calcTid.textContent = tid;
+                detailTid.textContent = tid;
+                cctvTid.textContent = tid;
+                
+                // Update remaining results
+                const remaining50 = results.denom.replenish50 + results.denom.stored50 - results.denom.dispense50;
+                const remaining100 = results.denom.replenish100 + results.denom.stored100 - results.denom.dispense100;
+                
+                remaining50Replenish.textContent = results.denom.replenish50;
+                remaining50Stored.textContent = results.denom.stored50;
+                remaining50Dispense.textContent = results.denom.dispense50;
+                remaining50Total.textContent = remaining50;
+                
+                remaining100Replenish.textContent = results.denom.replenish100;
+                remaining100Stored.textContent = results.denom.stored100;
+                remaining100Dispense.textContent = results.denom.dispense100;
+                remaining100Total.textContent = remaining100;
+                
+                // Update calculation table
+                calcInitAmount.textContent = formatCurrency(results.replenish.total);
+                calcFailed.textContent = `+ ${formatCurrency(results.failed.total)}`;
+                calcStored.textContent = `+ ${formatCurrency(results.stored.total)}`;
+                calcTaken.textContent = `- ${formatCurrency(results.taken.total)}`;
+                
+                // Calculate final result
+                const finalAmount = results.replenish.total + results.failed.total + results.stored.total - results.taken.total;
+                calcResult.textContent = formatCurrency(finalAmount);
+                finalResult.textContent = formatCurrency(finalAmount);
+                
+                // Update transaction details
+                transactionDetails.innerHTML = '';
+                
+                // Add replenishment transactions (only the first one)
+                results.replenish.transactions.forEach(trans => {
+                    addTransactionRow('replenish', trans.file, trans.amount, trans.line, trans.initAmountLine);
+                });
+                
+                // Add failed transactions
+                results.failed.transactions.forEach(trans => {
+                    addTransactionRow('failed', trans.file, trans.amount, trans.line);
+                });
+                
+                // Add stored transactions
+                results.stored.transactions.forEach(trans => {
+                    addTransactionRow('stored', trans.file, trans.amount, trans.line);
+                });
+                
+                // Add taken transactions
+                results.taken.transactions.forEach(trans => {
+                    addTransactionRow('taken', trans.file, trans.amount, trans.line);
+                });
+                
+                // Update CCTV details
+                updateCCTVDetails();
+                
+                // Update debug info with final results
+                debugInfo.textContent += `\n=== HASIL AKHIR ===\n`;
+                debugInfo.textContent += `ATM ID: ${results.tid || 'Tidak ditemukan'}\n`;
+                debugInfo.textContent += `Replenishment: ${formatCurrency(results.replenish.total)} (hanya nilai pertama)\n`;
+                debugInfo.textContent += `Host Store Failed: ${formatCurrency(results.failed.total)}\n`;
+                debugInfo.textContent += `Host Store Stored: ${formatCurrency(results.stored.total)}\n`;
+                debugInfo.textContent += `Cash Taken: ${formatCurrency(results.taken.total)}\n`;
+                debugInfo.textContent += `Replenish Lembar (setelah dibagi 2) - 50,000: ${results.denom.replenish50}, 100,000: ${results.denom.replenish100}\n`;
+                debugInfo.textContent += `Stored Count - 50,000: ${results.denom.stored50}, 100,000: ${results.denom.stored100}\n`;
+                debugInfo.textContent += `Dispense Count - 50,000: ${results.denom.dispense50}, 100,000: ${results.denom.dispense100}\n`;
+                debugInfo.textContent += `Sisa Lembar - 50,000: ${remaining50}, 100,000: ${remaining100}\n`;
+                debugInfo.textContent += `Hasil Rekonsiliasi: ${formatCurrency(finalAmount)}\n`;
+                debugInfo.textContent += `Jumlah CCTV REPLENISHMENT: ${results.cctv.replenishment.length}\n`;
+                debugInfo.textContent += `Jumlah CCTV Door: ${results.cctv.door.length}\n`;
+                debugInfo.textContent += `Jumlah CCTV Power: ${results.cctv.power.length}\n`;
+            }
+            
+            // Update CCTV details table
+            function updateCCTVDetails() {
+                cctvDetails.innerHTML = '';
+                
+                // Add REPLENISHMENT events
+                results.cctv.replenishment.forEach(event => {
+                    addCCTVRow('replenishment', event.file, event.line, event.timestamp, event.detail);
+                });
+                
+                // Add Door events
+                results.cctv.door.forEach(event => {
+                    addCCTVRow('door', event.file, event.line, event.timestamp, event.detail);
+                });
+                
+                // Add Power events
+                results.cctv.power.forEach(event => {
+                    addCCTVRow('power', event.file, event.line, event.timestamp, event.detail);
+                });
+            }
+            
+            // Add CCTV row to details table
+            function addCCTVRow(type, file, line, timestamp, detail) {
+                const row = document.createElement('tr');
+                
+                let typeBadge = '';
+                if (type === 'replenishment') {
+                    typeBadge = '<span class="cctv-badge badge-replenishment">REPLENISHMENT</span>';
+                } else if (type === 'door') {
+                    typeBadge = '<span class="cctv-badge badge-door">DOOR</span>';
+                } else if (type === 'power') {
+                    typeBadge = '<span class="cctv-badge badge-power">POWER</span>';
+                }
+                
+                row.innerHTML = `
+                    <td>${timestamp}</td>
+                    <td>${typeBadge}</td>
+                    <td>${file}</td>
+                    <td>${line}</td>
+                    <td>${detail}</td>
+                `;
+                
+                cctvDetails.appendChild(row);
+            }
+            
+            // Add transaction row to details table
+            function addTransactionRow(type, file, amount, line, initAmountLine = null) {
+                const row = document.createElement('tr');
+                
+                let typeBadge = '';
+                if (type === 'failed') {
+                    typeBadge = '<span class="badge bg-danger">Failed</span>';
+                } else if (type === 'stored') {
+                    typeBadge = '<span class="badge bg-success">Stored</span>';
+                } else if (type === 'taken') {
+                    typeBadge = '<span class="badge bg-primary">Taken</span>';
+                } else if (type === 'replenish') {
+                    typeBadge = '<span class="badge bg-purple">Replenish</span>';
+                }
+                
+                const lineInfo = initAmountLine ? `REPL: ${line}, INIT: ${initAmountLine}` : line;
+                
+                row.innerHTML = `
+                    <td>${typeBadge}</td>
+                    <td>${file}</td>
+                    <td>${lineInfo}</td>
+                    <td>${formatCurrency(amount)}</td>
+                `;
+                
+                transactionDetails.appendChild(row);
+            }
+            
+            // Export results to CSV
+            function exportResults() {
+                let csvContent = 'Jenis,File,Line,Amount\n';
+                
+                // Add replenishment transactions (only the first one)
+                results.replenish.transactions.forEach(trans => {
+                    csvContent += `REPLENISHMENT,${trans.file},${trans.line},${trans.amount}\n`;
+                });
+                
+                // Add failed transactions
+                results.failed.transactions.forEach(trans => {
+                    csvContent += `Host Store: Failed,${trans.file},${trans.line},${trans.amount}\n`;
+                });
+                
+                // Add stored transactions
+                results.stored.transactions.forEach(trans => {
+                    csvContent += `Host Store: Stored,${trans.file},${trans.line},${trans.amount}\n`;
+                });
+                
+                // Add taken transactions
+                results.taken.transactions.forEach(trans => {
+                    csvContent += `Cash Taken,${trans.file},${trans.line},${trans.amount}\n`;
+                });
+                
+                // Add denomination summary
+                csvContent += '\n';
+                csvContent += 'DENOMINATION SUMMARY\n';
+                csvContent += 'Type,Denom 50,000,Denom 100,000\n';
+                csvContent += `Replenish Lembar (setelah dibagi 2),${results.denom.replenish50},${results.denom.replenish100}\n`;
+                csvContent += `Stored Count,${results.denom.stored50},${results.denom.stored100}\n`;
+                csvContent += `Dispense Count,${results.denom.dispense50},${results.denom.dispense100}\n`;
+                csvContent += `Sisa Lembar,${results.denom.replenish50 + results.denom.stored50 - results.denom.dispense50},${results.denom.replenish100 + results.denom.stored100 - results.denom.dispense100}\n`;
+                
+                // Add TID information
+                csvContent += '\n';
+                csvContent += `ATM ID,${results.tid || 'Tidak ditemukan'}\n`;
+                
+                // Add summary
+                csvContent += '\n';
+                csvContent += `REplenishment Total,,,${results.replenish.total}\n`;
+                csvContent += `Host Store: Failed Total,,,${results.failed.total}\n`;
+                csvContent += `Host Store: Stored Total,,,${results.stored.total}\n`;
+                csvContent += `Cash Taken Total,,,${results.taken.total}\n`;
+                csvContent += `Final Result,,,${results.replenish.total + results.failed.total + results.stored.total - results.taken.total}\n`;
+                
+                // Add CCTV events
+                csvContent += '\n';
+                csvContent += 'CCTV EVENTS\n';
+                csvContent += 'Type,File,Line,Timestamp,Detail\n';
+                
+                // Add REPLENISHMENT events
+                results.cctv.replenishment.forEach(event => {
+                    csvContent += `REPLENISHMENT,${event.file},${event.line},${event.timestamp},${event.detail}\n`;
+                });
+                
+                // Add Door events
+                results.cctv.door.forEach(event => {
+                    csvContent += `DOOR,${event.file},${event.line},${event.timestamp},${event.detail}\n`;
+                });
+                
+                // Add Power events
+                results.cctv.power.forEach(event => {
+                    csvContent += `POWER,${event.file},${event.line},${event.timestamp},${event.detail}\n`;
+                });
+                
+                const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                const link = document.createElement('a');
+                const url = URL.createObjectURL(blob);
+                
+                link.setAttribute('href', url);
+                link.setAttribute('download', 'hasil_rekon_crm_hitachi.csv');
+                link.style.visibility = 'hidden';
+                
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+            
+            // Format file size
+            function formatFileSize(bytes) {
+                if (bytes < 1024) return bytes + ' bytes';
+                else if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+                else return (bytes / 1048576).toFixed(1) + ' MB';
+            }
+            
+            // Format currency
+            function formatCurrency(amount) {
+                return 'Rp ' + new Intl.NumberFormat('id-ID').format(amount);
+            }
+        });
+    </script>
+</body>
+</html>

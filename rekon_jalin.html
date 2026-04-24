@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Rekon EJ Jalin</title>
+<style>
+body { font-family: Arial; background:#f1f5f9; padding:20px }
+h2 { margin-bottom:5px }
+.card { background:#fff; padding:15px; border-radius:8px; margin-bottom:15px }
+table { width:100%; border-collapse:collapse; margin-top:10px }
+th,td { border:1px solid #ccc; padding:8px; font-size:14px }
+th { background:#2563eb; color:#fff }
+input[type=number] { padding:5px; width:150px }
+button { padding:8px 15px; cursor:pointer }
+</style>
+</head>
+<body>
+
+<h2>Rekon EJ Jalin</h2>
+
+<div class="card">
+    <input type="file" id="fileInput" multiple accept=".txt,.jrn">
+    <br><br>
+    Limit RPL :
+    <input type="number" id="limitRpl" value="0" onchange="updateRemaining()">
+    <button onclick="processFiles()">Proses</button>
+    <button onclick="downloadCSV()">Download CSV</button>
+</div>
+
+<div class="card">
+<h3>Hasil Rekon</h3>
+<table>
+<thead>
+<tr>
+<th>No</th>
+<th>TID</th>
+<th>Limit RPL</th>
+<th>Lembar Keluar</th>
+<th>Sisa Lembar</th>
+</tr>
+</thead>
+<tbody id="rekonBody"></tbody>
+</table>
+</div>
+
+<div class="card">
+<h3>CCTV Event (SUPERVISOR SAFE OPEN)</h3>
+<table>
+<thead>
+<tr>
+<th>No</th>
+<th>TID</th>
+<th>Waktu</th>
+<th>Keterangan</th>
+</tr>
+</thead>
+<tbody id="cctvBody"></tbody>
+</table>
+</div>
+
+<script>
+let trxDetails = [];
+let rekonMap = {};
+let cctvEvents = [];
+
+function processFiles() {
+    trxDetails = [];
+    rekonMap = {};
+    cctvEvents = [];
+
+    const files = document.getElementById('fileInput').files;
+    if (!files.length) return alert("Upload file dulu");
+
+    [...files].forEach(file => {
+        const reader = new FileReader();
+        reader.onload = e => parseFile(e.target.result);
+        reader.readAsText(file);
+    });
+
+    setTimeout(renderResult, 300);
+}
+
+function parseFile(text) {
+    const lines = text.split('\n');
+
+    lines.forEach(line => {
+        if (line.includes('DISPENSED:')) {
+            const parts = line.split('|');
+            if (parts.length < 6) return;
+
+            const tid = parts[0].trim();
+            const startTime = parts[3];
+            const endTime = parts[4];
+            const dispensed = parts[5];
+
+            const matches = [...dispensed.matchAll(/(\d+)\s*x\s*([\d\.]+),00/g)];
+
+            let totalLembar = 0;
+            matches.slice(1,5).forEach(m => totalLembar += parseInt(m[1]));
+
+            trxDetails.push({
+                tid,
+                startTime,
+                endTime,
+                kaset1: matches[1]?.[1] || 0,
+                kaset2: matches[2]?.[1] || 0,
+                kaset3: matches[3]?.[1] || 0,
+                kaset4: matches[4]?.[1] || 0,
+                totalLembar
+            });
+
+            rekonMap[tid] = (rekonMap[tid] || 0) + totalLembar;
+        }
+
+        if (line.includes('SUPERVISOR SAFE OPEN')) {
+            const parts = line.split('|');
+            if (parts.length >= 5) {
+                cctvEvents.push({
+                    tid: parts[0],
+                    waktu: parts[4],
+                    ket: line.trim()
+                });
+            }
+        }
+    });
+}
+
+function renderResult() {
+    const limit = parseInt(document.getElementById('limitRpl').value) || 0;
+    const body = document.getElementById('rekonBody');
+    body.innerHTML = '';
+
+    let no = 1;
+    for (const tid in rekonMap) {
+        const keluar = rekonMap[tid];
+        const sisa = limit - keluar;
+
+        body.innerHTML += `
+        <tr>
+            <td>${no++}</td>
+            <td>${tid}</td>
+            <td>${limit}</td>
+            <td>${keluar}</td>
+            <td>${sisa}</td>
+        </tr>`;
+    }
+
+    const cctvBody = document.getElementById('cctvBody');
+    cctvBody.innerHTML = '';
+    cctvEvents.forEach((e,i)=>{
+        cctvBody.innerHTML += `
+        <tr>
+            <td>${i+1}</td>
+            <td>${e.tid}</td>
+            <td>${e.waktu}</td>
+            <td>${e.ket}</td>
+        </tr>`;
+    });
+}
+
+function updateRemaining() {
+    renderResult();
+}
+
+function downloadCSV() {
+    if (!trxDetails.length) return alert("Tidak ada data");
+
+    let csv = "TID,Start Time,End Time,Kaset1,Kaset2,Kaset3,Kaset4,Total Lembar\n";
+    trxDetails.forEach(t=>{
+        csv += `${t.tid},${t.startTime},${t.endTime},${t.kaset1},${t.kaset2},${t.kaset3},${t.kaset4},${t.totalLembar}\n`;
+    });
+
+    const blob = new Blob([csv], {type:'text/csv'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = "Detail_Rekon_EJ.csv";
+    a.click();
+}
+</script>
+
+</body>
+</html>

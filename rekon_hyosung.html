@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rekon EJ ATM Hyosung</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --success: #2ecc71;
+            --danger: #e74c3c;
+            --warning: #f39c12;
+            --light: #ecf0f1;
+            --dark: #34495e;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px 0;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .upload-section {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .drop-area {
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+            padding: 40px 20px;
+            margin: 20px 0;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .drop-area:hover, .drop-area.dragover {
+            border-color: var(--secondary);
+            background-color: rgba(52, 152, 219, 0.05);
+        }
+        
+        .drop-area p {
+            margin-bottom: 15px;
+            color: #666;
+        }
+        
+        .btn {
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            margin: 5px;
+        }
+        
+        .btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .btn-success {
+            background-color: var(--success);
+        }
+        
+        .btn-success:hover {
+            background-color: #27ae60;
+        }
+        
+        .btn-danger {
+            background-color: var(--danger);
+        }
+        
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+        
+        .file-list {
+            margin-top: 20px;
+            text-align: left;
+        }
+        
+        .file-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background-color: var(--light);
+            margin-bottom: 8px;
+            border-radius: 5px;
+        }
+        
+        .results-section {
+            display: none;
+            margin-top: 30px;
+        }
+        
+        .result-card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .result-card h3 {
+            color: var(--primary);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--light);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        th {
+            background-color: var(--light);
+            color: var(--dark);
+        }
+        
+        tr:hover {
+            background-color: rgba(52, 152, 219, 0.05);
+        }
+        
+        .success-row {
+            background-color: rgba(46, 204, 113, 0.2);
+        }
+        
+        .danger-row {
+            background-color: rgba(231, 76, 60, 0.2);
+        }
+        
+        .warning-row {
+            background-color: rgba(243, 156, 18, 0.2);
+        }
+        
+        .editable {
+            background-color: rgba(52, 152, 219, 0.1);
+            padding: 5px;
+            border-radius: 3px;
+            border: 1px dashed #ccc;
+            cursor: pointer;
+        }
+        
+        .editable:hover {
+            background-color: rgba(52, 152, 219, 0.2);
+        }
+        
+        .editable-input {
+            width: 100%;
+            padding: 5px;
+            border: 1px solid var(--secondary);
+            border-radius: 3px;
+        }
+        
+        .export-section {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .cctv-table {
+            font-family: monospace;
+            font-size: 14px;
+        }
+        
+        .cctv-table td {
+            padding: 8px 10px;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 20px;
+            color: #777;
+            font-size: 14px;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            th, td {
+                padding: 8px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Rekon EJ ATM Hyosung</h1>
+            <p>Upload file EJ (.txt atau .jrn) untuk melakukan analisis</p>
+        </header>
+        
+        <section class="upload-section">
+            <h2>Upload File</h2>
+            <div class="drop-area" id="dropArea">
+                <p>Drag & drop file disini atau</p>
+                <input type="file" id="fileInput" multiple accept=".txt,.jrn" style="display: none;">
+                <button class="btn" id="browseBtn">Browse Files</button>
+            </div>
+            
+            <div class="file-list" id="fileList"></div>
+            
+            <button class="btn" id="processBtn" style="display: none;">Proses File</button>
+            <button class="btn btn-danger" id="resetBtn" style="display: none;">Reset</button>
+        </section>
+        
+        <section class="results-section" id="resultsSection">
+            <div class="result-card">
+                <h3>Hasil Rekon EJ</h3>
+                <table id="rekonTable">
+                    <thead>
+                        <tr>
+                            <th>TID</th>
+                            <th>Denom</th>
+                            <th>Add Cash (Lbr)</th>
+                            <th>Total Amount IDR / Denom</th>
+                            <th>Remaining (Lbr)</th>
+                            <th>Remaining (Rp)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Hasil akan diisi oleh JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="result-card">
+                <h3>Analisa EJ</h3>
+                <table id="analisaTable">
+                    <thead>
+                        <tr>
+                            <th>Pickup Count</th>
+                            <th>Dispense Count</th>
+                            <th>Total Amount IDR / Denom</th>
+                            <th>Keterangan</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Hasil akan diisi oleh JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="result-card">
+                <h3>Permintaan CCTV</h3>
+                <table class="cctv-table" id="cctvTable">
+                    <thead>
+                        <tr>
+                            <th>Waktu</th>
+                            <th>Event</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Hasil akan diisi oleh JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="export-section">
+                <button class="btn btn-success" id="exportBtn">Export to CSV</button>
+            </div>
+        </section>
+    </div>
+    
+    <footer>
+        <p>© 2023 Rekon EJ ATM Hyosung</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const dropArea = document.getElementById('dropArea');
+            const fileInput = document.getElementById('fileInput');
+            const browseBtn = document.getElementById('browseBtn');
+            const fileList = document.getElementById('fileList');
+            const processBtn = document.getElementById('processBtn');
+            const resetBtn = document.getElementById('resetBtn');
+            const resultsSection = document.getElementById('resultsSection');
+            const exportBtn = document.getElementById('exportBtn');
+            const rekonTable = document.getElementById('rekonTable').querySelector('tbody');
+            const analisaTable = document.getElementById('analisaTable').querySelector('tbody');
+            const cctvTable = document.getElementById('cctvTable').querySelector('tbody');
+            
+            let uploadedFiles = [];
+            let analysisData = {};
+            let csvData = [];
+            
+            // Event handlers untuk drag and drop
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                dropArea.addEventListener(eventName, preventDefaults, false);
+            });
+            
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropArea.addEventListener(eventName, highlight, false);
+            });
+            
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropArea.addEventListener(eventName, unhighlight, false);
+            });
+            
+            function highlight() {
+                dropArea.classList.add('dragover');
+            }
+            
+            function unhighlight() {
+                dropArea.classList.remove('dragover');
+            }
+            
+            dropArea.addEventListener('drop', handleDrop, false);
+            
+            function handleDrop(e) {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+                handleFiles(files);
+            }
+            
+            browseBtn.addEventListener('click', () => {
+                fileInput.click();
+            });
+            
+            fileInput.addEventListener('change', () => {
+                handleFiles(fileInput.files);
+            });
+            
+            function handleFiles(files) {
+                // Reset file list
+                fileList.innerHTML = '';
+                uploadedFiles = [];
+                
+                for (let i = 0; i < files.length; i++) {
+                    const file = files[i];
+                    if (file.type === 'text/plain' || file.name.endsWith('.jrn')) {
+                        uploadedFiles.push(file);
+                        displayFile(file);
+                    }
+                }
+                
+                if (uploadedFiles.length > 0) {
+                    processBtn.style.display = 'inline-block';
+                    resetBtn.style.display = 'inline-block';
+                } else {
+                    processBtn.style.display = 'none';
+                    resetBtn.style.display = 'none';
+                }
+            }
+            
+            function displayFile(file) {
+                const fileItem = document.createElement('div');
+                fileItem.className = 'file-item';
+                fileItem.innerHTML = `
+                    <span>${file.name}</span>
+                    <span class="file-size">${formatFileSize(file.size)}</span>
+                `;
+                fileList.appendChild(fileItem);
+            }
+            
+            function formatFileSize(bytes) {
+                if (bytes === 0) return '0 Bytes';
+                const k = 1024;
+                const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+            }
+            
+            processBtn.addEventListener('click', processFiles);
+            resetBtn.addEventListener('click', resetApp);
+            
+            function resetApp() {
+                fileList.innerHTML = '';
+                uploadedFiles = [];
+                processBtn.style.display = 'none';
+                resetBtn.style.display = 'none';
+                resultsSection.style.display = 'none';
+                fileInput.value = '';
+                csvData = [];
+            }
+            
+            async function processFiles() {
+                if (uploadedFiles.length === 0) return;
+                
+                let allContent = '';
+                
+                for (const file of uploadedFiles) {
+                    const content = await readFileAsText(file);
+                    allContent += content + '\n';
+                }
+                
+                // Parse data dari konten file
+                analysisData.tid = findTID(allContent);
+                analysisData.denom = findDenom(allContent);
+                analysisData.addCash = findAddCash(allContent);
+                analysisData.pickupCount = findPickupCount(allContent);
+                analysisData.dispenseCount = findDispenseCount(allContent);
+                analysisData.totalAmountIDR = findTotalAmountIDR(allContent);
+                
+                // Bagi Add Cash menjadi 2
+                analysisData.addCash = analysisData.addCash / 2;
+                
+                // Hitung total amount dalam lembar
+                analysisData.totalAmountLbr = analysisData.totalAmountIDR / analysisData.denom;
+                
+                // Hitung nilai remaining (Add Cash - Total Amount IDR / Denom)
+                analysisData.remainingLbr = analysisData.addCash - analysisData.totalAmountLbr;
+                analysisData.remainingRp = analysisData.remainingLbr * analysisData.denom;
+                
+                // Kumpulkan data untuk CSV
+                prepareCSVData(allContent);
+                
+                // Tampilkan hasil di tabel Rekon
+                displayRekonResults();
+                
+                // Tampilkan hasil di tabel Analisa
+                displayAnalisaResults();
+                
+                // Tampilkan data CCTV
+                displayCCTVData(allContent);
+                
+                // Tampilkan section hasil
+                resultsSection.style.display = 'block';
+            }
+            
+            function displayRekonResults() {
+                rekonTable.innerHTML = `
+                    <tr>
+                        <td>${analysisData.tid}</td>
+                        <td>${analysisData.denom.toLocaleString('id-ID')}</td>
+                        <td class="editable" data-value="${analysisData.addCash}" onclick="makeEditable(this)">${analysisData.addCash.toLocaleString('id-ID')}</td>
+                        <td>${analysisData.totalAmountLbr.toLocaleString('id-ID')}</td>
+                        <td>${analysisData.remainingLbr.toLocaleString('id-ID')}</td>
+                        <td>${analysisData.remainingRp.toLocaleString('id-ID')}</td>
+                    </tr>
+                `;
+            }
+            
+            function displayAnalisaResults() {
+                analisaTable.innerHTML = '';
+                
+                const row = document.createElement('tr');
+                
+                // Cek apakah semua nilai sesuai
+                const isAllMatch = analysisData.pickupCount === analysisData.dispenseCount && 
+                                  analysisData.dispenseCount === analysisData.totalAmountLbr;
+                
+                const isPartialMatch = analysisData.pickupCount === analysisData.dispenseCount || 
+                                      analysisData.dispenseCount === analysisData.totalAmountLbr || 
+                                      analysisData.pickupCount === analysisData.totalAmountLbr;
+                
+                if (isAllMatch) {
+                    row.classList.add('success-row');
+                    row.innerHTML = `
+                        <td>${analysisData.pickupCount.toLocaleString('id-ID')}</td>
+                        <td>${analysisData.dispenseCount.toLocaleString('id-ID')}</td>
+                        <td>${analysisData.totalAmountLbr.toLocaleString('id-ID')}</td>
+                        <td>Transaksi dari pickup count, dispense count dan Total Amount IDR Sesuai</td>
+                    `;
+                } else if (!isAllMatch && !isPartialMatch) {
+                    row.classList.add('danger-row');
+                    row.innerHTML = `
+                        <td>${analysisData.pickupCount.toLocaleString('id-ID')}</td>
+                        <td>${analysisData.dispenseCount.toLocaleString('id-ID')}</td>
+                        <td>${analysisData.totalAmountLbr.toLocaleString('id-ID')}</td>
+                        <td>Tidak ada hasil yang sama dari ketiga keyword tersebut</td>
+                    `;
+                } else {
+                    row.classList.add('warning-row');
+                    
+                    let keterangan = 'Terdapat perbedaan jumlah transaksi pada keyword: ';
+                    const differences = [];
+                    
+                    if (analysisData.pickupCount !== analysisData.dispenseCount) differences.push('Pickup Count');
+                    if (analysisData.dispenseCount !== analysisData.totalAmountLbr) differences.push('Dispense Count');
+                    if (analysisData.pickupCount !== analysisData.totalAmountLbr) differences.push('Total Amount IDR');
+                    
+                    keterangan += differences.join(', ');
+                    
+                    row.innerHTML = `
+                        <td>${analysisData.pickupCount.toLocaleString('id-ID')}</td>
+                        <td>${analysisData.dispenseCount.toLocaleString('id-ID')}</td>
+                        <td>${analysisData.totalAmountLbr.toLocaleString('id-ID')}</td>
+                        <td>${keterangan}</td>
+                    `;
+                }
+                
+                analisaTable.appendChild(row);
+            }
+            
+            function displayCCTVData(content) {
+                cctvTable.innerHTML = '';
+                
+                // Cari semua baris yang mengandung ADD CASH:, Door, atau Power Up
+                const lines = content.split('\n');
+                const cctvEvents = [];
+                
+                for (let i = 0; i < lines.length; i++) {
+                    const line = lines[i].trim();
+                    
+                    // Cek jika baris mengandung kata kunci yang dicari
+                    if (line.includes('ADD CASH:') || 
+                        line.toLowerCase().includes('door') || 
+                        line.toLowerCase().includes('power up') ||
+                        line.toLowerCase().includes('safedoor')) {
+                        
+                        // Jika ini adalah baris ADD CASH:, gabungkan dengan baris sebelumnya (yang berisi timestamp)
+                        if (line.includes('ADD CASH:')) {
+                            if (i > 0) {
+                                const prevLine = lines[i-1].trim();
+                                // Cek jika baris sebelumnya adalah timestamp (format: DD/MM/YYYY HH:MM:SS)
+                                if (/^\d{2}\/\d{2}\/\d{4} \d{2}:\d{2}:\d{2}$/.test(prevLine)) {
+                                    cctvEvents.push(`${prevLine} ${line}`);
+                                    continue;
+                                }
+                            }
+                        }
+                        
+                        // Untuk baris lainnya, tambahkan langsung
+                        cctvEvents.push(line);
+                    }
+                }
+                
+                // Tampilkan event CCTV dalam tabel
+                if (cctvEvents.length > 0) {
+                    cctvEvents.forEach(event => {
+                        const row = document.createElement('tr');
+                        
+                        // Pisahkan timestamp dan event
+                        const parts = event.split(' ');
+                        const timestamp = parts.slice(0, 2).join(' ');
+                        const eventText = parts.slice(2).join(' ');
+                        
+                        row.innerHTML = `
+                            <td>${timestamp}</td>
+                            <td>${eventText}</td>
+                        `;
+                        
+                        cctvTable.appendChild(row);
+                    });
+                } else {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td colspan="2" style="text-align: center;">Tidak ada data CCTV yang ditemukan</td>
+                    `;
+                    cctvTable.appendChild(row);
+                }
+            }
+            
+            function readFileAsText(file) {
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = e => resolve(e.target.result);
+                    reader.onerror = e => reject(reader.error);
+                    reader.readAsText(file);
+                });
+            }
+            
+            function findTID(content) {
+                const regex = /ATM ID\s*:\s*(\d+).*?NO\.REF:/;
+                const match = content.match(regex);
+                return match ? match[1] : 'Tidak ditemukan';
+            }
+            
+            function findDenom(content) {
+                const regex = /IDR.*?(100000|50000)/;
+                const match = content.match(regex);
+                return match ? parseInt(match[1]) : 0;
+            }
+            
+            function findAddCash(content) {
+                const addCashIndex = content.indexOf('ADD CASH:');
+                if (addCashIndex === -1) return 0;
+                
+                // Ambil bagian setelah ADD CASH: (hanya yang pertama ditemukan)
+                const subContent = content.substring(addCashIndex);
+                
+                let total = 0;
+                const cstRegex = /(\d+)CST:\s*(\d+)/g;
+                let match;
+                
+                while ((match = cstRegex.exec(subContent)) !== null) {
+                    // Hanya ambil 4 CST pertama setelah ADD CASH:
+                    if (parseInt(match[1]) <= 4) {
+                        total += parseInt(match[2]);
+                    }
+                }
+                
+                return total;
+            }
+            
+            function findPickupCount(content) {
+                const regex = /Pickup Count\s*\[([^\]]+)\]/g;
+                let total = 0;
+                let match;
+                
+                while ((match = regex.exec(content)) !== null) {
+                    const numbers = match[1].split(',').map(num => parseInt(num.trim()) || 0);
+                    total += numbers.reduce((sum, num) => sum + num, 0);
+                }
+                
+                return total;
+            }
+            
+            function findDispenseCount(content) {
+                const regex = /Dispense Count\s*\[([^\]]+)\]/g;
+                let total = 0;
+                let match;
+                
+                while ((match = regex.exec(content)) !== null) {
+                    const numbers = match[1].split(',').map(num => parseInt(num.trim()) || 0);
+                    total += numbers.reduce((sum, num) => sum + num, 0);
+                }
+                
+                return total;
+            }
+            
+            function findTotalAmountIDR(content) {
+                const regex = /Total Amount IDR\s+(\d+)/g;
+                let total = 0;
+                let match;
+                
+                while ((match = regex.exec(content)) !== null) {
+                    total += parseInt(match[1]);
+                }
+                
+                return total;
+            }
+            
+            function prepareCSVData(content) {
+                csvData = [];
+                // Header CSV
+                csvData.push(['TID', 'Denom', 'Count', 'Total Amount IDR / Denom']);
+                
+                // Data untuk setiap transaksi berdasarkan Total Amount IDR
+                const totalAmountRegex = /Total Amount IDR\s+(\d+)/g;
+                let match;
+                
+                while ((match = totalAmountRegex.exec(content)) !== null) {
+                    const amount = parseInt(match[1]);
+                    const count = amount ;
+                    
+                    csvData.push([
+                        analysisData.tid,
+                        analysisData.denom,
+                        count,
+                        count
+                    ]);
+                }
+            }
+            
+            // Fungsi untuk export CSV
+            exportBtn.addEventListener('click', exportToCSV);
+            
+            function exportToCSV() {
+                if (csvData.length === 0) return;
+                
+                const csvContent = csvData.map(row => row.join(',')).join('\n');
+                
+                const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.setAttribute('href', url);
+                link.setAttribute('download', `rekon_ej_${analysisData.tid}.csv`);
+                link.style.visibility = 'hidden';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+            
+            // Fungsi global untuk membuat sel editable
+            window.makeEditable = function(element) {
+                const currentValue = element.getAttribute('data-value');
+                element.innerHTML = `<input type="number" class="editable-input" value="${currentValue}" onblur="updateValue(this)">`;
+                element.querySelector('input').focus();
+            };
+            
+            // Fungsi global untuk update nilai Add Cash
+            window.updateValue = function(input) {
+                const newValue = parseInt(input.value) || 0;
+                const row = input.closest('tr');
+                
+                // Update nilai Add Cash
+                input.parentElement.setAttribute('data-value', newValue);
+                input.parentElement.innerHTML = newValue.toLocaleString('id-ID');
+                
+                // Update nilai remaining (Add Cash - Total Amount IDR / Denom)
+                const totalAmountLbr = analysisData.totalAmountLbr;
+                const denom = analysisData.denom;
+                const remainingLbr = newValue - totalAmountLbr;
+                const remainingRp = remainingLbr * denom;
+                
+                row.cells[4].textContent = remainingLbr.toLocaleString('id-ID');
+                row.cells[5].textContent = remainingRp.toLocaleString('id-ID');
+                
+                // Update data analysis
+                analysisData.addCash = newValue;
+                analysisData.remainingLbr = remainingLbr;
+                analysisData.remainingRp = remainingRp;
+            };
+        });
+    </script>
+</body>
+</html>

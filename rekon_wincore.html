@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplikasi Rekon EJ Wincore</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #3b82f6;
+            --accent-color: #ef4444;
+            --light-color: #f8fafc;
+            --dark-color: #1e293b;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --info-color: #3b82f6;
+            --sidebar-width: 250px;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+            color: #334155;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        /* Layout */
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--dark-color);
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+        }
+        
+        .sidebar-header {
+            padding: 0 20px 20px;
+            border-bottom: 1px solid #334155;
+            margin-bottom: 20px;
+        }
+        
+        .sidebar-header h2 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.2rem;
+        }
+        
+        .sidebar-header h2 i {
+            color: var(--secondary-color);
+        }
+        
+        .nav-item {
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .nav-item:hover {
+            background: #334155;
+        }
+        
+        .nav-item.active {
+            background: var(--primary-color);
+        }
+        
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .header h1 {
+            color: var(--dark-color);
+            font-size: 1.8rem;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--dark-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        /* Upload Section */
+        .upload-section {
+            position: relative;
+        }
+        
+        .upload-area {
+            border: 2px dashed #cbd5e1;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: #f8fafc;
+        }
+        
+        .upload-area:hover {
+            border-color: var(--primary-color);
+            background: #f1f5f9;
+        }
+        
+        .upload-area.dragover {
+            border-color: var(--primary-color);
+            background: #e0f2fe;
+        }
+        
+        .upload-icon {
+            font-size: 40px;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+        
+        .upload-text h3 {
+            margin-bottom: 8px;
+            color: var(--dark-color);
+            font-size: 1.2rem;
+        }
+        
+        .upload-text p {
+            color: #64748b;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+        
+        .file-list {
+            margin-top: 16px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .file-item {
+            background: #f8fafc;
+            padding: 10px 15px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+        }
+        
+        .file-name {
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .file-size {
+            color: #64748b;
+            font-size: 0.85rem;
+            margin-right: 10px;
+        }
+        
+        .remove-btn {
+            background: none;
+            border: none;
+            color: var(--accent-color);
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        /* Info Section */
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .info-item {
+            padding: 12px;
+            background: #f8fafc;
+            border-radius: 8px;
+        }
+        
+        .info-label {
+            font-size: 0.85rem;
+            color: #64748b;
+            margin-bottom: 5px;
+        }
+        
+        .info-value {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+        
+        .addcash-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: 12px;
+            margin-top: 12px;
+        }
+        
+        .addcash-item {
+            text-align: center;
+            padding: 10px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        .addcash-input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 1rem;
+            margin-top: 5px;
+        }
+        
+        /* Buttons */
+        .action-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin: 20px 0;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-process {
+            background: var(--success-color);
+            color: white;
+        }
+        
+        .btn-process:hover {
+            background: #0da271;
+        }
+        
+        .btn-clear {
+            background: var(--accent-color);
+            color: white;
+        }
+        
+        .btn-clear:hover {
+            background: #dc2626;
+        }
+        
+        .btn-export {
+            background: var(--primary-color);
+            color: white;
+        }
+        
+        .btn-export:hover {
+            background: #1d4ed8;
+        }
+        
+        .btn-upload {
+            background: var(--secondary-color);
+            color: white;
+            margin-top: 15px;
+        }
+        
+        .btn-upload:hover {
+            background: #2563eb;
+        }
+        
+        /* Table */
+        .table-container {
+            overflow-x: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            background: white;
+            margin-bottom: 20px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        
+        th {
+            background: var(--primary-color);
+            color: white;
+            font-weight: 500;
+        }
+        
+        tr:hover {
+            background: #f8fafc;
+        }
+        
+        .total-row {
+            font-weight: bold;
+            background: #f1f5f9;
+        }
+        
+        /* CCTV Table */
+        .cctv-table th {
+            background: var(--warning-color);
+        }
+        
+        .cctv-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: white;
+        }
+        
+        .badge-door {
+            background-color: #8b5cf6;
+        }
+        
+        .badge-power {
+            background-color: #f97316;
+        }
+        
+        .badge-clear {
+            background-color: var(--info-color);
+        }
+        
+        /* Footer */
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .app-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                padding: 10px;
+            }
+            
+            .nav-items {
+                display: flex;
+                overflow-x: auto;
+            }
+            
+            .nav-item {
+                padding: 10px 15px;
+                white-space: nowrap;
+            }
+            
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .addcash-inputs {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fas fa-atm"></i> ATM Wincore</h2>
+            </div>
+            
+            <div class="nav-items">
+                <div class="nav-item active">
+                    <i class="fas fa-home"></i>
+                    <span>Dashboard</span>
+                </div>
+                <div class="nav-item">
+                    <i class="fas fa-file-upload"></i>
+                    <span>Upload EJ</span>
+                </div>
+                <div class="nav-item">
+                    <i class="fas fa-history"></i>
+                    <span>Riwayat</span>
+                </div>
+                <div class="nav-item">
+                    <i class="fas fa-cog"></i>
+                    <span>Pengaturan</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="header">
+                <h1>Rekon EJ Wincore</h1>
+                <div class="user-info">
+                    <div class="user-avatar">OP</div>
+                    <span>Operator</span>
+                </div>
+            </div>
+
+            <div class="instructions">
+                <h4><i class="fas fa-info-circle me-2"></i>Petunjuk Penggunaan</h4>
+                <ol class="mb-0">
+                    <li>Potong EJ Periode RPL dari CLEAR CASH Hingga Periode Return CLEAR CASH</li>
+                    <li>Upload file <span class="keyword">.jrn</span> atau <span class="keyword">.txt</span> dari Wincore (bisa multiple files)</li>
+                    <li>Isi Addcash Per-kasetnya Manual, baru klik Proses File, Export CSV jika ingin detail transaksinya atau ingin dibuat form Rekon RDI</li>
+                </ol>
+            </div>
+
+            <!-- Upload Card -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <span>Upload File EJ</span>
+                    </div>
+                </div>
+                <div class="upload-section">
+                    <div class="upload-area" id="uploadArea">
+                        <div class="upload-icon">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <div class="upload-text">
+                            <h3>Klik atau tarik file ke sini</h3>
+                            <p>Format file: .txt atau .jrn (bisa multiple selection)</p>
+                        </div>
+                        <input type="file" id="fileInput" multiple accept=".txt,.jrn" style="display: none;">
+                        <button class="btn btn-upload" id="uploadButton">
+                            <i class="fas fa-folder-open"></i> Pilih File
+                        </button>
+                    </div>
+                    
+                    <div class="file-list" id="fileList">
+                        <p id="noFilesMessage" style="text-align: center; padding: 15px; color: #64748b;">
+                            <i class="fas fa-info-circle"></i> Belum ada file yang diupload
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Info Card -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <i class="fas fa-info-circle"></i>
+                        <span>Informasi</span>
+                    </div>
+                </div>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-label">TID ATM</div>
+                        <div class="info-value" id="tidValue">-</div>
+                    </div>
+                    
+                    <div class="info-item">
+                        <div class="info-label">Add Cash (Input Manual)</div>
+                        <div class="addcash-inputs">
+                            <div class="addcash-item">
+                                <div>Kaset 1</div>
+                                <input type="number" class="addcash-input" id="addcashInput1" value="0" min="0" onchange="updateAddcash()">
+                            </div>
+                            <div class="addcash-item">
+                                <div>Kaset 2</div>
+                                <input type="number" class="addcash-input" id="addcashInput2" value="0" min="0" onchange="updateAddcash()">
+                            </div>
+                            <div class="addcash-item">
+                                <div>Kaset 3</div>
+                                <input type="number" class="addcash-input" id="addcashInput3" value="0" min="0" onchange="updateAddcash()">
+                            </div>
+                            <div class="addcash-item">
+                                <div>Kaset 4</div>
+                                <input type="number" class="addcash-input" id="addcashInput4" value="0" min="0" onchange="updateAddcash()">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <button class="btn btn-clear" onclick="clearAll()">
+                    <i class="fas fa-trash"></i> Clear All
+                </button>
+                <button class="btn btn-export" onclick="exportToCSV()">
+                    <i class="fas fa-file-export"></i> Export to CSV
+                </button>
+                <button class="btn btn-process" onclick="processFiles()">
+                    <i class="fas fa-cogs"></i> Proses File
+                </button>
+            </div>
+
+            <!-- Results Card -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <i class="fas fa-table"></i>
+                        <span>Hasil Rekon</span>
+                    </div>
+                </div>
+                <div class="table-container">
+                    <table id="resultsTable">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>TID</th>
+                                <th>Denom Kaset</th>
+                                <th>Jumlah Lembar Keluar</th>
+                                <th>Add Cash</th>
+                                <th>Remaining (Lbr)</th>
+                                <th>Remaining (Rp.)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="7" style="text-align: center;">Belum ada data</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="total-row">
+                    <div style="padding: 15px; text-align: right;">
+                        Total Remaining: <span id="totalRemaining">0</span> Lembar | 
+                        Total Rupiah: <span id="totalRupiah">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CCTV Card -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <i class="fas fa-video"></i>
+                        <span>Permintaan CCTV</span>
+                    </div>
+                </div>
+                <div class="table-container">
+                    <table id="cctvTable" class="cctv-table">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Nama File</th>
+                                <th>Keterangan</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="3" style="text-align: center;">Belum ada data CCTV</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="footer">
+                <p>Aplikasi Rekon EJ Wincore &copy; 2023</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Variabel global untuk menyimpan data
+        let uploadedFiles = [];
+        let tidAtm = "";
+        let denomData = { kaset1: 0, kaset2: 0, kaset3: 0, kaset4: 0 };
+        let addcashData = { kaset1: 0, kaset2: 0, kaset3: 0, kaset4: 0 };
+        let dispensedData = { kaset1: 0, kaset2: 0, kaset3: 0, kaset4: 0 };
+        let transactionDetails = [];
+        let cctvEvents = [];
+        
+        // Inisialisasi event listeners saat halaman dimuat
+        document.addEventListener('DOMContentLoaded', function() {
+            const fileInput = document.getElementById('fileInput');
+            const uploadButton = document.getElementById('uploadButton');
+            const uploadArea = document.getElementById('uploadArea');
+            
+            // Event ketika file dipilih melalui input
+            fileInput.addEventListener('change', handleFileSelect);
+            
+            // Event untuk tombol upload
+            uploadButton.addEventListener('click', function() {
+                fileInput.click();
+            });
+            
+            // Event untuk drag and drop
+            uploadArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                uploadArea.classList.add('dragover');
+            });
+            
+            uploadArea.addEventListener('dragleave', function() {
+                uploadArea.classList.remove('dragover');
+            });
+            
+            uploadArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                uploadArea.classList.remove('dragover');
+                
+                if (e.dataTransfer.files.length > 0) {
+                    handleFiles(e.dataTransfer.files);
+                }
+            });
+        });
+        
+        // Fungsi untuk menangani pemilihan file
+        function handleFileSelect(e) {
+            if (e.target.files.length > 0) {
+                handleFiles(e.target.files);
+            }
+        }
+        
+        // Fungsi untuk memproses file yang dipilih
+        function handleFiles(files) {
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                
+                // Cek apakah file sudah diupload sebelumnya
+                if (uploadedFiles.some(f => f.name === file.name && f.size === file.size)) {
+                    continue;
+                }
+                
+                // Cek format file
+                if (!file.name.toLowerCase().endsWith('.txt') && !file.name.toLowerCase().endsWith('.jrn')) {
+                    alert(`File ${file.name} bukan format yang didukung (.txt atau .jrn)`);
+                    continue;
+                }
+                
+                uploadedFiles.push(file);
+            }
+            
+            displayFileList();
+        }
+        
+        // Fungsi untuk menampilkan daftar file yang diupload
+        function displayFileList() {
+            const fileList = document.getElementById('fileList');
+            const noFilesMessage = document.getElementById('noFilesMessage');
+            
+            if (uploadedFiles.length === 0) {
+                noFilesMessage.style.display = 'block';
+                fileList.innerHTML = '';
+                fileList.appendChild(noFilesMessage);
+                return;
+            }
+            
+            noFilesMessage.style.display = 'none';
+            fileList.innerHTML = '';
+            
+            uploadedFiles.forEach((file, index) => {
+                const fileItem = document.createElement('div');
+                fileItem.className = 'file-item';
+                
+                const fileName = document.createElement('div');
+                fileName.className = 'file-name';
+                fileName.innerHTML = `<i class="fas fa-file-alt"></i> ${file.name}`;
+                
+                const fileSize = document.createElement('div');
+                fileSize.className = 'file-size';
+                fileSize.textContent = formatFileSize(file.size);
+                
+                const removeBtn = document.createElement('button');
+                removeBtn.className = 'remove-btn';
+                removeBtn.innerHTML = '<i class="fas fa-times"></i>';
+                removeBtn.title = 'Hapus file';
+                removeBtn.onclick = () => removeFile(index);
+                
+                fileItem.appendChild(fileName);
+                fileItem.appendChild(fileSize);
+                fileItem.appendChild(removeBtn);
+                
+                fileList.appendChild(fileItem);
+            });
+        }
+        
+        // Fungsi untuk menghapus file dari daftar
+        function removeFile(index) {
+            uploadedFiles.splice(index, 1);
+            displayFileList();
+        }
+        
+        // Fungsi untuk memformat ukuran file
+        function formatFileSize(bytes) {
+            if (bytes < 1024) return bytes + ' bytes';
+            else if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+            else return (bytes / 1048576).toFixed(1) + ' MB';
+        }
+        
+        // Fungsi untuk mengupdate addcash dari input manual
+        function updateAddcash() {
+            addcashData.kaset1 = parseInt(document.getElementById('addcashInput1').value) || 0;
+            addcashData.kaset2 = parseInt(document.getElementById('addcashInput2').value) || 0;
+            addcashData.kaset3 = parseInt(document.getElementById('addcashInput3').value) || 0;
+            addcashData.kaset4 = parseInt(document.getElementById('addcashInput4').value) || 0;
+            
+            // Update hasil jika sudah ada data
+            if (dispensedData.kaset1 > 0 || dispensedData.kaset2 > 0 || dispensedData.kaset3 > 0 || dispensedData.kaset4 > 0) {
+                displayResults();
+            }
+        }
+        
+        // Fungsi untuk membersihkan semua data
+        function clearAll() {
+            uploadedFiles = [];
+            tidAtm = "";
+            denomData = { kaset1: 0, kaset2: 0, kaset3: 0, kaset4: 0 };
+            addcashData = { kaset1: 0, kaset2: 0, kaset3: 0, kaset4: 0 };
+            dispensedData = { kaset1: 0, kaset2: 0, kaset3: 0, kaset4: 0 };
+            transactionDetails = [];
+            cctvEvents = [];
+            
+            document.getElementById('tidValue').textContent = "-";
+            document.getElementById('addcashInput1').value = "0";
+            document.getElementById('addcashInput2').value = "0";
+            document.getElementById('addcashInput3').value = "0";
+            document.getElementById('addcashInput4').value = "0";
+            document.getElementById('totalRemaining').textContent = "0";
+            document.getElementById('totalRupiah').textContent = "0";
+            
+            const tbody = document.querySelector('#resultsTable tbody');
+            tbody.innerHTML = '<tr><td colspan="7" style="text-align: center;">Belum ada data</td></tr>';
+            
+            const cctvTbody = document.querySelector('#cctvTable tbody');
+            cctvTbody.innerHTML = '<tr><td colspan="3" style="text-align: center;">Belum ada data CCTV</td></tr>';
+            
+            displayFileList();
+        }
+        
+        // Fungsi untuk memproses file
+        async function processFiles() {
+            if (uploadedFiles.length === 0) {
+                alert('Silakan upload file terlebih dahulu!');
+                return;
+            }
+            
+            try {
+                // Reset data sebelumnya (kecuali addcash)
+                tidAtm = "";
+                denomData = { kaset1: 0, kaset2: 0, kaset3: 0, kaset4: 0 };
+                dispensedData = { kaset1: 0, kaset2: 0, kaset3: 0, kaset4: 0 };
+                transactionDetails = [];
+                cctvEvents = [];
+                
+                // Ekstrak TID ATM dari file pertama
+                await extractTidAtm(uploadedFiles[0]);
+                
+                // Ekstrak data denom dari file pertama
+                await extractDenomData(uploadedFiles[0]);
+                
+                // Ekstrak data lembar keluar dari semua file
+                for (const file of uploadedFiles) {
+                    await extractDispensedData(file);
+                }
+                
+                // Ekstrak data CCTV dari semua file
+                for (const file of uploadedFiles) {
+                    await extractCCTVData(file);
+                }
+                
+                // Tampilkan hasil
+                displayResults();
+                displayCCTVResults();
+                
+            } catch (error) {
+                alert('Terjadi kesalahan saat memproses file: ' + error.message);
+                console.error(error);
+            }
+        }
+        
+        // Fungsi untuk mengekstrak TID ATM dari file
+        async function extractTidAtm(file) {
+            const content = await readFileContent(file);
+            
+            // Cari pola ATM ID
+            const pattern = /ATM ID\s*:\s*(\d+)\s*NO\.REF:/;
+            const match = content.match(pattern);
+            
+            if (match) {
+                tidAtm = match[1];
+                document.getElementById('tidValue').textContent = tidAtm;
+            } else {
+                alert("TID ATM tidak ditemukan dalam file!");
+            }
+        }
+        
+        // Fungsi untuk mengekstrak data denom dari file
+        async function extractDenomData(file) {
+            const content = await readFileContent(file);
+            
+            // Cari baris yang mengandung IDR
+            const lines = content.split('\n');
+            
+            for (const line of lines) {
+                if (line.includes('IDR')) {
+                    // Cari nilai denom (100000 atau 50000)
+                    if (line.includes('100000')) {
+                        denomData.kaset1 = 100000;
+                        denomData.kaset2 = 100000;
+                        denomData.kaset3 = 100000;
+                        denomData.kaset4 = 100000;
+                        break;
+                    } else if (line.includes('50000')) {
+                        denomData.kaset1 = 50000;
+                        denomData.kaset2 = 50000;
+                        denomData.kaset3 = 50000;
+                        denomData.kaset4 = 50000;
+                        break;
+                    }
+                }
+            }
+        }
+        
+        // Fungsi untuk mengekstrak data lembar keluar
+        async function extractDispensedData(file) {
+            const content = await readFileContent(file);
+            
+            // Pola untuk mencari semua transaksi CASH
+            const cashPattern = /CASH\s+((\d:\d,\d+;)+)/g;
+            let cashMatch;
+            
+            while ((cashMatch = cashPattern.exec(content)) !== null) {
+                const cashString = cashMatch[1];
+                const fullMatch = cashMatch[0];
+                
+                // Ekstrak semua transaksi dari string CASH
+                const transactionPattern = /(\d):(\d),(\d+);/g;
+                let transactionMatch;
+                
+                while ((transactionMatch = transactionPattern.exec(cashString)) !== null) {
+                    const kasetNumber = parseInt(transactionMatch[1]);
+                    const jumlah = parseInt(transactionMatch[3]);
+                    
+                    // Tambahkan ke kaset yang sesuai
+                    if (kasetNumber >= 1 && kasetNumber <= 4) {
+                        dispensedData[`kaset${kasetNumber}`] += jumlah;
+                        
+                        // Simpan detail transaksi untuk CSV
+                        transactionDetails.push({
+                            kategori: `Kaset ${kasetNumber}`,
+                            denom: denomData[`kaset${kasetNumber}`],
+                            jumlahLembar: jumlah,
+                            rupiahTransaksi: jumlah * denomData[`kaset${kasetNumber}`]
+                        });
+                    }
+                }
+            }
+        }
+        
+        // Fungsi untuk mengekstrak data CCTV (CLEAR CASH, Door, dan Power Up)
+        async function extractCCTVData(file) {
+            const content = await readFileContent(file);
+            const lines = content.split('\n');
+            
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i];
+                const lineLower = line.toLowerCase();
+                
+                // Cari baris yang mengandung kata "CLEAR CASH" (case insensitive)
+                if (lineLower.includes('clear cash')) {
+                    cctvEvents.push({
+                        file: removeFileExtension(file.name),
+                        keterangan: line.trim()
+                    });
+                }
+                
+                // Cari baris yang mengandung kata "Door" (case insensitive)
+                if (lineLower.includes('door')) {
+                    cctvEvents.push({
+                        file: removeFileExtension(file.name),
+                        keterangan: line.trim()
+                    });
+                }
+                
+                // Cari baris yang mengandung kata "Power Up" atau "Power-up" (case insensitive)
+                if (lineLower.includes('power up') || lineLower.includes('power-up')) {
+                    cctvEvents.push({
+                        file: removeFileExtension(file.name),
+                        keterangan: line.trim()
+                    });
+                }
+            }
+        }
+        
+        // Fungsi untuk menghapus ekstensi file
+        function removeFileExtension(filename) {
+            return filename.replace(/\.(txt|jrn)$/i, '');
+        }
+        
+        // Fungsi untuk membaca konten file
+        function readFileContent(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    resolve(e.target.result);
+                };
+                
+                reader.onerror = function() {
+                    reject(new Error('Gagal membaca file'));
+                };
+                
+                reader.readAsText(file);
+            });
+        }
+        
+        // Fungsi untuk menampilkan hasil
+        function displayResults() {
+            const tbody = document.querySelector('#resultsTable tbody');
+            tbody.innerHTML = '';
+            
+            let totalRemaining = 0;
+            let totalRupiah = 0;
+            let totalDispensed = 0;
+            
+            const kasets = [
+                { id: 'kaset1', name: 'Kaset 1' },
+                { id: 'kaset2', name: 'Kaset 2' },
+                { id: 'kaset3', name: 'Kaset 3' },
+                { id: 'kaset4', name: 'Kaset 4' }
+            ];
+            
+            kasets.forEach((kaset, index) => {
+                const addcash = addcashData[kaset.id];
+                const dispensed = dispensedData[kaset.id];
+                const denom = denomData[kaset.id];
+                const remaining = addcash - dispensed;
+                const remainingRupiah = remaining * denom;
+                
+                totalRemaining += remaining;
+                totalRupiah += remainingRupiah;
+                totalDispensed += dispensed;
+                
+                const row = document.createElement('tr');
+                
+                if (index === 0) {
+                    // Baris pertama dengan TID dan Denom yang di-merge
+                    row.innerHTML = `
+                        <td>${index + 1}</td>
+                        <td rowspan="4">${tidAtm}</td>
+                        <td rowspan="4">${denom.toLocaleString('id-ID')}</td>
+                        <td>${kaset.name}</td>
+                        <td>${dispensed}</td>
+                        <td>${addcash}</td>
+                        <td>${remaining}</td>
+                        <td>${remainingRupiah.toLocaleString('id-ID')}</td>
+                    `;
+                } else {
+                    // Baris lainnya tanpa TID dan Denom
+                    row.innerHTML = `
+                        <td>${index + 1}</td>
+                        <td>${kaset.name}</td>
+                        <td>${dispensed}</td>
+                        <td>${addcash}</td>
+                        <td>${remaining}</td>
+                        <td>${remainingRupiah.toLocaleString('id-ID')}</td>
+                    `;
+                }
+                
+                tbody.appendChild(row);
+            });
+            
+            // Tambahkan baris total
+            const totalRow = document.createElement('tr');
+            totalRow.className = 'total-row';
+            totalRow.innerHTML = `
+                <td colspan="3"><strong>Total</strong></td>
+                <td><strong>${totalDispensed}</strong></td>
+                <td><strong>${addcashData.kaset1 + addcashData.kaset2 + addcashData.kaset3 + addcashData.kaset4}</strong></td>
+                <td><strong>${totalRemaining}</strong></td>
+                <td><strong>${totalRupiah.toLocaleString('id-ID')}</strong></td>
+            `;
+            tbody.appendChild(totalRow);
+            
+            document.getElementById('totalRemaining').textContent = totalRemaining;
+            document.getElementById('totalRupiah').textContent = totalRupiah.toLocaleString('id-ID');
+        }
+        
+        // Fungsi untuk menampilkan hasil CCTV
+        function displayCCTVResults() {
+            const tbody = document.querySelector('#cctvTable tbody');
+            tbody.innerHTML = '';
+            
+            if (cctvEvents.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="3" style="text-align: center;">Tidak ditemukan data CLEAR CASH, Door atau Power Up</td></tr>';
+                return;
+            }
+            
+            cctvEvents.forEach((event, index) => {
+                const row = document.createElement('tr');
+                
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${event.file}</td>
+                    <td>${event.keterangan}</td>
+                `;
+                
+                tbody.appendChild(row);
+            });
+        }
+        
+        // Fungsi untuk export ke CSV
+        function exportToCSV() {
+            if (transactionDetails.length === 0 && cctvEvents.length === 0) {
+                alert('Tidak ada data untuk diexport!');
+                return;
+            }
+            
+            let csvContent = "";
+            
+            // Tambahkan data transaksi jika ada
+            if (transactionDetails.length > 0) {
+                csvContent += "DATA TRANSAKSI\n";
+                csvContent += "Kategori,Denom,Jumlah Lembar,Rupiah Transaksi\n";
+                
+                transactionDetails.forEach(transaction => {
+                    csvContent += `${transaction.kategori},${transaction.denom},${transaction.jumlahLembar},${transaction.rupiahTransaksi}\n`;
+                });
+                
+                csvContent += "\n";
+            }
+            
+            // Tambahkan data CCTV jika ada
+            if (cctvEvents.length > 0) {
+                csvContent += "DATA CCTV\n";
+                csvContent += "Nama File,Keterangan\n";
+                
+                cctvEvents.forEach(event => {
+                    csvContent += `${event.file},"${event.keterangan.replace(/"/g, '""')}"\n`;
+                });
+            }
+            
+            // Buat nama file dengan format TID_tanggal_TransaksiEjLog.csv
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const fileName = `${tidAtm}_${year}${month}${day}_TransaksiEjLog.csv`;
+            
+            // Buat blob dan download
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement("a");
+            const url = URL.createObjectURL(blob);
+            
+            link.setAttribute("href", url);
+            link.setAttribute("download", fileName);
+            link.style.visibility = 'hidden';
+            
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    </script>
+</body>
+</html>
