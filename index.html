@@ -138,6 +138,128 @@
             margin: 0 auto;
             width: 100%;
         }
+
+        .intro-text {
+            max-width: 760px;
+            margin: 0 auto 24px;
+            text-align: center;
+            color: #cbd5e1;
+            font-size: 1.02rem;
+        }
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 28px;
+            margin-bottom: 40px;
+        }
+
+        .category-card {
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.92) 0%, rgba(30, 41, 59, 0.88) 100%);
+            border-radius: 22px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 34px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 18px 40px rgba(0, 0, 0, 0.22);
+        }
+
+        .category-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at top right, rgba(255, 255, 255, 0.12), transparent 45%);
+            pointer-events: none;
+        }
+
+        .category-card.atm-category {
+            border-color: rgba(16, 185, 129, 0.35);
+        }
+
+        .category-card.crm-category {
+            border-color: rgba(126, 106, 233, 0.35);
+        }
+
+        .category-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 16px;
+            border-radius: 999px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            margin-bottom: 18px;
+        }
+
+        .atm-category .category-badge {
+            background: rgba(16, 185, 129, 0.16);
+            color: #6ee7b7;
+        }
+
+        .crm-category .category-badge {
+            background: rgba(126, 106, 233, 0.16);
+            color: #c4b5fd;
+        }
+
+        .category-card h2 {
+            font-size: 2rem;
+            margin-bottom: 12px;
+            color: #fff;
+        }
+
+        .category-card p {
+            color: #cbd5e1;
+            margin-bottom: 18px;
+        }
+
+        .category-list {
+            list-style: none;
+            margin-bottom: 24px;
+        }
+
+        .category-list li {
+            color: #e2e8f0;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .category-list li:last-child {
+            border-bottom: none;
+        }
+
+        .section-block {
+            margin-top: 42px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .section-title i {
+            font-size: 1.4rem;
+        }
+
+        .section-title h2 {
+            font-size: 1.9rem;
+            color: #fff;
+        }
+
+        .section-header p {
+            color: #cbd5e1;
+            max-width: 620px;
+        }
         
         /* Menu Grid */
         .menu-grid {
@@ -376,6 +498,15 @@
             .menu-card {
                 padding: 25px;
             }
+
+            .category-card {
+                padding: 26px;
+            }
+
+            .category-card h2,
+            .section-title h2 {
+                font-size: 1.6rem;
+            }
             
             .menu-icon {
                 font-size: 50px;
@@ -404,17 +535,53 @@
 
     <!-- Main Content -->
     <div class="main-content">
-        <div class="menu-grid">
-            <!-- Hitachi Card -->
-            <div class="menu-card hitachi-card">
-                <div class="menu-icon">
-                    <i class="fas fa-atm"></i>
+        <p class="intro-text">
+            Pilih kategori utama terlebih dahulu, lalu buka aplikasi rekonsiliasi sesuai jenis mesin yang ingin Anda proses.
+        </p>
+
+        <div class="category-grid">
+            <div class="category-card atm-category">
+                <div class="category-badge">
+                    <i class="fas fa-building-columns"></i>
+                    ATM
                 </div>
-                <h3>Rekon EJ Hitachi</h3>
-                <p>Aplikasi rekonsiliasi canggih untuk ATM dengan sistem CRM Hitachi. Mendukung format file .jrn dan .txt dengan analisis mendalam.</p>
-                <a href="RekonCRM.html" class="btn">Buka Aplikasi</a>
+                <h2>Menu ATM</h2>
+                <p>Kumpulan aplikasi rekonsiliasi untuk mesin ATM reguler dengan berbagai vendor yang sudah tersedia dan yang masih dalam pengembangan.</p>
+                <ul class="category-list">
+                    <li>Rekon EJ Wincore</li>
+                    <li>Rekon EJ Hyosung</li>
+                    <li>Rekon EJ Jalin</li>
+                    <li>Rekon EJ NCR</li>
+                </ul>
+                <a href="#atm-menu" class="btn">Buka Menu ATM</a>
             </div>
-            
+
+            <div class="category-card crm-category">
+                <div class="category-badge">
+                    <i class="fas fa-vault"></i>
+                    CRM
+                </div>
+                <h2>Menu CRM</h2>
+                <p>Kumpulan aplikasi rekonsiliasi untuk mesin CRM, termasuk yang sudah aktif dan dua menu baru yang sementara ditandai segera hadir.</p>
+                <ul class="category-list">
+                    <li>Rekon EJ Hitachi</li>
+                    <li>Rekon EJ CRM NCR</li>
+                    <li>Rekon EJ CRM OKI</li>
+                </ul>
+                <a href="#crm-menu" class="btn">Buka Menu CRM</a>
+            </div>
+        </div>
+
+        <section class="section-block" id="atm-menu">
+            <div class="section-header">
+                <div class="section-title">
+                    <i class="fas fa-building-columns" style="color: var(--wincore-color);"></i>
+                    <h2>ATM</h2>
+                </div>
+                <p>Berikut daftar aplikasi rekonsiliasi untuk ATM yang tersedia pada sistem utama.</p>
+            </div>
+
+            <div class="menu-grid">
             <!-- Wincore Card -->
             <div class="menu-card wincore-card">
                 <div class="menu-icon">
@@ -434,6 +601,16 @@
                <p>Solusi rekonsiliasi komprehensif untuk ATM Hyosung Proses file .txt dan .jrn dengan akurasi tinggi dan fitur ekspor data.</p>
                 <a href="rekon_hyosung.html" class="btn">Buka Aplikasi</a>
             </div>
+
+            <!-- Jalin Card -->
+            <div class="menu-card jalin-card">
+                <div class="menu-icon">
+                    <i class="fas fa-atm"></i>
+                </div>
+                <h3>Rekon EJ Jalin</h3>
+               <p>Solusi rekonsiliasi komprehensif untuk ATM Jalin Proses file .txt dan .jrn dengan akurasi tinggi dan fitur ekspor data.</p>
+                <a href="rekon_jalin.html" class="btn">Buka Aplikasi</a>
+            </div>
             
             <!-- NCR Card -->
             <div class="menu-card ncr-card">
@@ -444,6 +621,29 @@
                 <p>Tools rekonsiliasi untuk ATM NCR (Dalam pengembangan). Dengan interface intuitif dan processing yang cepat.</p>
                 <button class="btn btn-disabled" disabled>Segera Hadir</button>
             </div>
+            </div>
+        </section>
+
+        <section class="section-block" id="crm-menu">
+            <div class="section-header">
+                <div class="section-title">
+                    <i class="fas fa-vault" style="color: var(--hitachi-color);"></i>
+                    <h2>CRM</h2>
+                </div>
+                <p>Berikut daftar aplikasi rekonsiliasi untuk CRM yang aktif dan yang sedang dipersiapkan.</p>
+            </div>
+
+            <div class="menu-grid">
+            <!-- Hitachi Card -->
+            <div class="menu-card hitachi-card">
+                <div class="menu-icon">
+                    <i class="fas fa-atm"></i>
+                </div>
+                <h3>Rekon EJ Hitachi</h3>
+                <p>Aplikasi rekonsiliasi canggih untuk ATM dengan sistem CRM Hitachi. Mendukung format file .jrn dan .txt dengan analisis mendalam.</p>
+                <a href="RekonCRM.html" class="btn">Buka Aplikasi</a>
+            </div>
+
             <!-- CRM NCR Card -->
             <div class="menu-card crm-ncr-card">
                 <div class="menu-icon">
@@ -463,17 +663,8 @@
                 <p>Tools rekonsiliasi untuk CRM OKI (Dalam pengembangan). Dengan interface intuitif dan processing yang cepat.</p>
                 <button class="btn btn-disabled" disabled>Segera Hadir</button>
             </div>
-            
-            <!-- Jalin Card -->
-            <div class="menu-card jalin-card">
-                <div class="menu-icon">
-                    <i class="fas fa-atm"></i>
-                </div>
-                <h3>Rekon EJ Jalin</h3>
-               <p>Solusi rekonsiliasi komprehensif untuk ATM Jalin Proses file .txt dan .jrn dengan akurasi tinggi dan fitur ekspor data.</p>
-                <a href="rekon_jalin.html" class="btn">Buka Aplikasi</a>
             </div>
-        </div>
+        </section>
     </div>
 
     <!-- Footer -->
